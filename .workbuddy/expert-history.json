@@ -8,7 +8,7 @@
         "profession": "后端架构师",
         "avatarUrl": "https://acc-1258344699.cos.accelerate.myqcloud.com/workbuddy/experts/avatars/02-Engineering/BackendArchitect/BackendArchitect.png",
         "promptUrl": "https://acc-1258344699.cos.accelerate.myqcloud.com/workbuddy/experts/experts/02-Engineering/BackendArchitect/BackendArchitect_zh.md",
-        "usedAt": 1777273232191,
+        "usedAt": 1777277810059,
         "industryId": "02-Engineering"
       },
       {
@@ -22,5 +22,5 @@
       }
     ]
   },
-  "lastUpdated": 1777274732705
+  "lastUpdated": 1777277864950
 }

@@ -90,7 +90,7 @@ body{font-family:"PingFang SC","Microsoft YaHei","SimSun",sans-serif;background:
   <div class="hdr-t">🍽️ 后厨管理台</div>
   <div class="hdr-r">
     <div class="live-dot"></div>
-    <div class="live-t">实时监听中</div>
+    <div class="live-t" id="conn-status" style="font-size:11px;font-weight:700;color:rgba(255,255,255,.85)">连接中...</div>
   </div>
 </div>
 
@@ -260,36 +260,58 @@ function deleteOrder(id){
 
 // Listen to Firebase
 const ordersRef = DB.ref('orders');
+
+// Connection status indicator
+function setConnStatus(text, color){
+  const el = document.getElementById('conn-status');
+  if(el){ el.textContent = text; el.style.color = color||'#fff'; }
+}
+
+// Error handler
+function onError(error){
+  console.error('Firebase error:', error);
+  setConnStatus('连接失败', '#FFD700');
+  showToast('Firebase连接失败：' + (error.message||'请刷新页面'));
+}
+
+// Attach listeners
 ordersRef.on('child_added', (snap)=>{
   const val = snap.val();
   const key = snap.key;
+  console.log('[Firebase] child_added:', key, val);
   if(!allOrders[key]){
     allOrders[key] = val;
     if(val.status==='new') playNotifySound();
     updateStats();
     renderOrders();
+    showToast('📩 收到新订单 #' + key.slice(-6).toUpperCase());
   }
 });
 ordersRef.on('child_changed', (snap)=>{
   const val = snap.val();
   const key = snap.key;
+  console.log('[Firebase] child_changed:', key, val);
   allOrders[key] = val;
   updateStats();
   renderOrders();
 });
 ordersRef.on('child_removed', (snap)=>{
   const key = snap.key;
+  console.log('[Firebase] child_removed:', key);
   delete allOrders[key];
   updateStats();
   renderOrders();
 });
 
 // Load existing orders on startup
+setConnStatus('连接中...', '#FFD700');
 ordersRef.once('value').then(snap=>{
   allOrders = snap.val() || {};
+  console.log('[Firebase] Initial load:', allOrders);
+  setConnStatus('实时监听中', '#4A9E6B');
   updateStats();
   renderOrders();
-});
+}).catch(onError);
 </script>
 </body>
 </html>
