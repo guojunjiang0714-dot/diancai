@@ -7,6 +7,9 @@
 <style>
 /* ===== 家常菜点菜系统 - 清新粉白主题 ===== */
 :root{--p:#E8628A;--pl:#F093B0;--pd:#C94070;--bg:#FFF5F8;--card:#FFFFFF;--tx:#3D1F2D;--sub:#9B7088;--bd:#F5D5E2;--tagbg:#FCEEF3;--tagc:#C94070;--ok:#4A9E6B;--err:#E8628A;--sh:0 3px 14px rgba(232,98,138,.10);--r:16px}
+/* SPLASH screen variables */
+:root{--s-bg:#1a0a10;--s-g1:#E8628A;--s-g2:#F093B0;--s-g3:#FBBFD2;--s-g4:#C94070;--s-text:#fff;--s-sub:rgba(255,200,220,.75)}
+
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:"PingFang SC","Microsoft YaHei","SimSun",sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;background-image:url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23E8628A' fill-opacity='0.04'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10s-10-4.477-10-10 4.477-10 10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10S0 25.523 0 20s4.477-10 10-10zm10 8c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm40 40c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
 .hd{background:linear-gradient(160deg,#C94070 0%,#E8628A 50%,#F093B0 100%);color:#fff;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 3px 20px rgba(201,64,112,.25);border-bottom:2px solid rgba(255,255,255,.18)}
@@ -139,6 +142,677 @@ body{font-family:"PingFang SC","Microsoft YaHei","SimSun",sans-serif;background:
   .ov{align-items:flex-end;padding:0}
   .top-banner{font-size:11px;padding:5px 12px}
 }
+
+
+/* ===== SPLASH WELCOME SCREEN ===== */
+#splash{
+  position:fixed;inset:0;z-index:9999;
+  background:#1a0a10;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+#splash.hide{animation:splashOut 1s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes splashOut{
+  0%{opacity:1;transform:scale(1)}
+  40%{opacity:.7;transform:scale(1.03)}
+  100%{opacity:0;transform:scale(1.06);pointer-events:none}
+}
+
+/* 动态光晕背景 */
+.s-bg-layer{position:absolute;inset:0;pointer-events:none}
+.s-orb{
+  position:absolute;border-radius:50%;
+  filter:blur(90px);opacity:.22;
+  animation:orbFloat ease-in-out infinite alternate;
+}
+.s-orb:nth-child(1){width:500px;height:500px;background:#E8628A;top:-120px;left:-120px;animation-duration:8s}
+.s-orb:nth-child(2){width:420px;height:420px;background:#F093B0;bottom:-80px;right:-100px;animation-duration:10s}
+.s-orb:nth-child(3){width:300px;height:300px;background:#C94070;top:30%;right:10%;animation-duration:7s;opacity:.12}
+@keyframes orbFloat{
+  0%{transform:translate(0,0) scale(1)}
+  100%{transform:translate(30px,20px) scale(1.12)}
+}
+
+/* 噪点纹理叠加 */
+.s-noise{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size:200px 200px;
+  opacity:.6;
+}
+
+/* 浮动装饰食物SVG */
+.s-foods{
+  position:absolute;inset:0;pointer-events:none;overflow:hidden;
+}
+.s-food{
+  position:absolute;font-size:32px;
+  filter:drop-shadow(0 4px 16px rgba(201,64,112,.3));
+  animation:foodFloat ease-in-out infinite alternate;
+  opacity:.75;
+}
+.s-food:nth-child(1){top:12%;left:8%;font-size:36px;animation-duration:6s;animation-delay:0s}
+.s-food:nth-child(2){top:18%;right:10%;font-size:28px;animation-duration:8s;animation-delay:1s}
+.s-food:nth-child(3){top:65%;left:6%;font-size:30px;animation-duration:7s;animation-delay:.5s}
+.s-food:nth-child(4){top:70%;right:8%;font-size:34px;animation-duration:9s;animation-delay:2s}
+.s-food:nth-child(5){top:40%;left:4%;font-size:24px;animation-duration:11s;animation-delay:3s}
+.s-food:nth-child(6){top:30%;right:5%;font-size:26px;animation-duration:6.5s;animation-delay:1.5s}
+.s-food:nth-child(7){bottom:15%;left:20%;font-size:22px;animation-duration:10s;animation-delay:2.5s}
+.s-food:nth-child(8){bottom:20%;right:18%;font-size:28px;animation-duration:7.5s;animation-delay:.8s}
+@keyframes foodFloat{
+  0%{transform:translateY(0px) rotate(0deg) scale(1)}
+  100%{transform:translateY(-22px) rotate(8deg) scale(1.08)}
+}
+
+/* 主内容区 */
+.s-main{
+  position:relative;z-index:10;
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;max-width:700px;padding:0 24px;
+}
+
+/* 小标签 */
+.s-eyebrow{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+  border-radius:20px;padding:5px 14px;font-size:11px;
+  color:rgba(255,200,220,.7);letter-spacing:2px;text-transform:uppercase;
+  margin-bottom:20px;
+  backdrop-filter:blur(8px);
+  opacity:0;
+  animation:seqFadeIn .6s .2s ease both;
+}
+.s-eyebrow-dot{width:5px;height:5px;border-radius:50%;background:#E8628A;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes seqFadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+/* 大标题 */
+.s-headline{
+  font-size:clamp(38px,9vw,72px);
+  font-weight:900;line-height:1.05;
+  letter-spacing:-1px;margin-bottom:10px;
+  opacity:0;
+  animation:seqFadeIn .8s .4s ease both;
+}
+.s-headline .s-t1{color:#fff;display:block}
+.s-headline .s-t2{
+  background:linear-gradient(90deg,#E8628A,#F093B0,#FBBFD2);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;display:block;
+}
+
+/* 副标题 */
+.s-tagline{
+  font-size:clamp(14px,2.5vw,17px);
+  color:rgba(255,200,220,.7);margin-bottom:36px;max-width:420px;
+  line-height:1.6;letter-spacing:.3px;
+  opacity:0;
+  animation:seqFadeIn .8s .6s ease both;
+}
+
+/* 统计卡片 */
+.s-stats{
+  display:flex;gap:16px;margin-bottom:40px;
+  opacity:0;
+  animation:seqFadeIn .8s .8s ease both;
+}
+.s-stat{
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);
+  border-radius:16px;padding:14px 22px;text-align:center;
+  backdrop-filter:blur(12px);
+  min-width:110px;
+}
+.s-stat-num{font-size:28px;font-weight:900;color:#E8628A;line-height:1}
+.s-stat-num .s-counter{display:inline}
+.s-stat-label{font-size:11px;color:rgba(255,200,220,.7);margin-top:4px;letter-spacing:1px}
+.s-stat:nth-child(2) .s-stat-num{color:#F093B0}
+.s-stat:nth-child(3) .s-stat-num{color:#C94070}
+
+/* CTA按钮 */
+.s-cta{
+  opacity:0;
+  animation:seqFadeIn .8s 1.1s ease both;
+}
+.s-cta-btn{
+  position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#E8628A,#FBBFD2);
+  color:#fff;border:none;border-radius:40px;
+  padding:16px 52px;font-size:16px;font-weight:800;
+  cursor:pointer;letter-spacing:.5px;
+  box-shadow:0 8px 32px rgba(255,107,53,.4),0 0 0 0 rgba(255,107,53,.3);
+  transition:all .25s;
+}
+.s-cta-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,#FBBFD2,#E8628A);
+  opacity:0;transition:opacity .25s;
+}
+.s-cta-btn:hover::before{opacity:1}
+.s-cta-btn:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(255,107,53,.5)}
+.s-cta-btn:active{transform:scale(.97)}
+.s-cta-btn span{position:relative;z-index:1}
+.s-cta-hint{font-size:11px;color:rgba(255,200,220,.7);margin-top:10px;letter-spacing:.5px}
+
+/* 底部签名 */
+.s-footer{
+  position:absolute;bottom:22px;
+  font-size:10px;color:rgba(255,255,255,.2);letter-spacing:3px;
+}
+
+/* 加载进度条 */
+.s-progress{
+  position:absolute;bottom:0;left:0;height:2px;
+  background:linear-gradient(90deg,#E8628A,#F093B0,#FBBFD2);
+  width:0;animation:sProgress 1.6s 1.3s ease forwards;
+  border-radius:0 2px 2px 0;
+}
+@keyframes sProgress{to{width:100%}}
+
+/* 移动端适配 */
+@media(max-width:500px){
+  .s-stats{gap:10px}
+  .s-stat{padding:12px 16px;min-width:90px}
+  .s-stat-num{font-size:22px}
+  .s-food:nth-child(5),.s-food:nth-child(7){display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== SPLASH SCREEN V2 ==================== -->
+<div id="splash">
+  <!-- 动态光晕层 -->
+  <div class="s-bg-layer">
+    <div class="s-orb"></div>
+    <div class="s-orb"></div>
+    <div class="s-orb"></div>
+  </div>
+  <!-- 噪点纹理 -->
+  <div class="s-noise"></div>
+
+  <!-- 浮动食物装饰 -->
+  <div class="s-foods">
+    <div class="s-food">🍜</div>
+    <div class="s-food">🥬</div>
+    <div class="s-food">🥩</div>
+    <div class="s-food">🍳</div>
+    <div class="s-food">🌶️</div>
+    <div class="s-food">🥕</div>
+    <div class="s-food">🧄</div>
+    <div class="s-food">🥗</div>
+  </div>
+
+  <!-- 主内容 -->
+  <div class="s-main">
+    <!-- 顶栏小标签 -->
+    <div class="s-eyebrow">
+      <div class="s-eyebrow-dot"></div>
+      <span>精选家常菜谱 · 点餐系统</span>
+    </div>
+
+    <!-- 大标题 -->
+    <div class="s-headline">
+      <span class="s-t1">家常菜</span>
+      <span class="s-t2">点菜系统</span>
+    </div>
+
+    <!-- 副标题 -->
+    <p class="s-tagline">
+      收录 185 道经典家常美味<br>
+      每一道都是家的味道，轻轻一点即刻点餐
+    </p>
+
+    <!-- 统计数字 -->
+    <div class="s-stats">
+      <div class="s-stat">
+        <div class="s-stat-num"><span class="s-counter" data-target="185">0</span></div>
+        <div class="s-stat-label">精选菜品</div>
+      </div>
+      <div class="s-stat">
+        <div class="s-stat-num"><span class="s-counter" data-target="12">0</span></div>
+        <div class="s-stat-label">分类标签</div>
+      </div>
+      <div class="s-stat">
+        <div class="s-stat-num"><span class="s-counter" data-target="100">0</span><span style="font-size:14px">%</span></div>
+        <div class="s-stat-label">免费使用</div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="s-cta">
+      <button class="s-cta-btn" onclick="enterApp()">
+        <span>🍽️ &nbsp;开始点菜</span>
+      </button>
+      <div class="s-cta-hint">无需注册 · 随开随用 · 即选即点</div>
+    </div>
+  </div>
+
+  <!-- 底部签名 -->
+  <div class="s-footer">HOME KITCHEN MENU SYSTEM · 2025</div>
+
+  <!-- 进度条 -->
+  <div class="s-progress"></div>
+</div>
+
+<div class="hd">
+  <div class="hd-t"><span class="hd-icon">🏠</span>家常菜点菜</div>
+  <button class="cart-btn" onclick="openCart()">
+    🛒 购物车 <span class="badge" id="cart-count">0</span>
+  </button>
+</div>
+
+<div class="top-banner">
+  🔥 每日精选 · 明码标价 · 无需注册 · 随点随吃
+</div>
+
+<div class="fb">
+  <div class="sr">
+    <input class="si" id="search" placeholder="🔍 搜索菜品、食材..." oninput="render()">
+    <select class="fs" id="diff-sel" onchange="render()">
+      <option value="">全部难度</option>
+      <option value="简单">简单</option>
+      <option value="中等">中等</option>
+      <option value="复杂">复杂</option>
+    </select>
+    <select class="fs" id="scene-sel" onchange="render()">
+      <option value="">全部场景</option>
+      <option value="标准午餐">标准午餐</option>
+      <option value="低卡轻食">低卡轻食</option>
+      <option value="丰盛正餐">丰盛正餐</option>
+      <option value="大份硬菜">大份硬菜</option>
+    </select>
+  </div>
+  <div class="ct" id="cat-tabs"></div>
+</div>
+
+<div class="main">
+  <div class="main-head">
+    <div class="main-title">
+      <span class="main-title-icon">🍳</span>
+      <span>今日菜单</span>
+    </div>
+    <div class="main-count" id="dish-count">共 0 道菜品</div>
+  </div>
+  <div class="grid" id="dish-grid"></div>
+</div>
+
+<button class="fab" title="添加新菜" onclick="openAdmin(null)">＋</button>
+
+<!-- Detail Modal -->
+<div class="ov" id="detail-ov" onclick="if(event.target===this)closeDetail()">
+  <div class="modal" id="detail-modal">
+    <div class="modal-hd">
+      <div>
+        <div class="modal-title" id="d-name"></div>
+        <div style="font-size:12px;color:var(--sub);margin-top:3px" id="d-cat"></div>
+      </div>
+      <button class="modal-close" onclick="closeDetail()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="meta-row" id="d-meta"></div>
+      <div class="st">🥬 食材 &amp; 调料</div>
+      <div class="chips" id="d-chips"></div>
+      <div class="st">📊 营养参考 (每份)</div>
+      <div class="nut" id="d-nut"></div>
+      <div id="d-scene-tag" style="margin-top:12px"></div>
+      <button style="width:100%;margin-top:14px;background:var(--p);color:#fff;border:none;border-radius:20px;padding:11px;font-size:14px;font-weight:700;cursor:pointer" onclick="addFromDetail()">🛒 加入购物车</button>
+    </div>
+  </div>
+</div>
+
+<!-- Cart Drawer -->
+<div class="cart-ov" id="cart-ov">
+  <div class="cart-bg" onclick="closeCart()"></div>
+  <div class="cart-drawer">
+    <div class="cart-hd">
+      <span>🛒 我的餐盘</span>
+      <button onclick="closeCart()" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--sub);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;transition:all .15s">×</button>
+    </div>
+    <div class="cart-items" id="cart-items"></div>
+    <div class="cart-ft">
+      <div class="cart-total">合计：<span class="total-price" id="cart-total">¥0</span></div>
+      <button class="order-btn" onclick="submitOrder()">✅ 确认下单</button>
+      <button class="clear-btn" onclick="clearCart()">🗑️ 清空购物车</button>
+    </div>
+  </div>
+</div>
+
+<!-- Admin Modal -->
+<div class="admin-ov" id="admin-ov" onclick="if(event.target===this)closeAdmin()">
+  <div class="admin-modal">
+    <div class="admin-hd">
+      <h2 id="admin-title">➕ 添加新菜品</h2>
+      <button onclick="closeAdmin()" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--sub)">×</button>
+    </div>
+    <div class="admin-body">
+      <input type="hidden" id="f-id">
+      <div class="form-2">
+        <div class="form-row"><label>菜品名称 *</label><input id="f-name" placeholder="如：番茄炒蛋"></div>
+        <div class="form-row"><label>分类 *</label>
+          <select id="f-cat">
+            <option>蛋类</option><option>猪肉类</option><option>鸡肉类</option><option>牛肉类</option>
+            <option>羊肉类</option><option>鱼虾类</option><option>豆腐类</option><option>蔬菜类</option>
+            <option>凉菜类</option><option>汤类</option><option>主食类</option><option>其他</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-2">
+        <div class="form-row"><label>参考售价(元)</label><input id="f-price" type="number" placeholder="18"></div>
+        <div class="form-row"><label>烹饪时间(分钟)</label><input id="f-time" type="number" placeholder="15"></div>
+      </div>
+      <div class="form-2">
+        <div class="form-row"><label>难度</label>
+          <select id="f-diff"><option>简单</option><option>中等</option><option>复杂</option></select>
+        </div>
+        <div class="form-row"><label>热量(kcal)</label><input id="f-kcal" type="number" placeholder="300"></div>
+      </div>
+      <div class="form-2">
+        <div class="form-row"><label>推荐场景</label>
+          <select id="f-scene">
+            <option value="">请选择</option>
+            <option>标准午餐</option><option>低卡轻食</option><option>丰盛正餐</option><option>大份硬菜</option>
+          </select>
+        </div>
+        <div class="form-row"><label>标签(可空)</label><input id="f-tag" placeholder="如：⚡ 快手"></div>
+      </div>
+      <div class="form-row"><label>描述</label><textarea id="f-desc" rows="2" placeholder="一句话介绍这道菜"></textarea></div>
+      <div class="form-btn-row">
+        <button class="fb-save" onclick="saveDish()">💾 保存</button>
+        <button class="fb-cancel" onclick="closeAdmin()">取消</button>
+        <button id="del-btn" style="background:none;border:1.5px solid var(--err);border-radius:20px;padding:10px 14px;font-size:12px;cursor:pointer;color:var(--err);display:none" onclick="deleteDish()">🗑️ 删除</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Order Confirm -->
+<div class="order-confirm" id="order-confirm">
+  <div class="oc-box">
+    <div class="oc-icon">🍽️</div>
+    <div class="oc-title">下单成功！</div>
+    <div class="oc-sub" id="oc-sub"></div>
+    <button class="oc-ok" onclick="closeOrderConfirm()">🥢 继续点菜</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ==================== SPLASH V2 ====================
+(function initSplash(){
+  // 数字滚动动画
+  const counters = document.querySelectorAll('.s-counter[data-target]');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        const el = entry.target;
+        const target = parseInt(el.dataset.target);
+        const duration = 1600;
+        const start = performance.now();
+        function tick(now){
+          const elapsed = now - start;
+          const progress = Math.min(elapsed / duration, 1);
+          // easeOutExpo
+          const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+          el.textContent = Math.round(eased * target);
+          if(progress < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+        observer.unobserve(el);
+      }
+    });
+  }, {threshold: 0.3});
+
+  counters.forEach(c => observer.observe(c));
+})();
+
+function enterApp(){
+  const splash = document.getElementById('splash');
+  splash.classList.add('hide');
+  splash.addEventListener('animationend', ()=>{
+    splash.style.display='none';
+  },{once:true});
+}
+
+// ==================== DATA ====================
+const BASE_DISHES = [{"id":"D001","name":"番茄炒蛋","cat":"蛋类","price":18.0,"time":10.0,"diff":"简单","kcal":389.0,"protein":17.0,"fat":10.0,"carb":10.2,"cost":14.2,"profit":16.48,"desc":"经典家常菜，酸甜可口","ingredients":[{"type":"I-食材","name":"鸡蛋","qty":2.0,"unit":"个"},{"type":"I-食材","name":"番茄","qty":3.0,"unit":"个"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"盐","qty":2.0,"unit":"克"},{"type":"S-调料","name":"生抽/酱油","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"葱","qty":2.0,"unit":"根"}],"scene":"标准午餐","tag":"⚡ 快手"},{"id":"D002","name":"韭菜炒蛋","cat":"蛋类","price":16.0,"time":8.0,"diff":"简单","kcal":338.0,"protein":14.0,"fat":10.0,"carb":1.2,"cost":2.8,"profit":15.08,"desc":"鲜香嫩滑，补肾佳品","ingredients":[{"type":"I-食材","name":"鸡蛋","qty":2.0,"unit":"个"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"盐","qty":2.0,"unit":"克"},{"type":"S-调料","name":"生抽/酱油","qty":1.0,"unit":"勺"}],"scene":"标准午餐","tag":"⚡ 快手"},{"id":"D003","name":"葱花炒蛋","cat":"蛋类","price":14.0,"time":8.0,"diff":"简单","kcal":339.0,"protein":14.0,"fat":10.0,"carb":1.2,"cost":2.8,"profit":12.48,"desc":"葱香浓郁，操作简便","ingredients":[{"type":"I-食材","name":"鸡蛋","qty":2.0,"unit":"个"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"盐","qty":2.0,"unit":"克"},{"type":"S-调料","name":"葱","qty":3.0,"unit":"根"}],"scene":"标准午餐","tag":"⚡ 快手"},{"id":"D004","name":"蒜苗炒蛋","cat":"蛋类","price":16.0,"time":10.0,"diff":"简单","kcal":342.0,"protein":14.0,"fat":10.0,"carb":1.2,"cost":2.8,"profit":14.48,"desc":"蒜香扑鼻，下饭神器","ingredients":[{"type":"I-食材","name":"鸡蛋","qty":2.0,"unit":"个"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"盐","qty":2.0,"unit":"克"},{"type":"S-调料","name":"蒜苗","qty":3.0,"unit":"根"}],"scene":"标准午餐","tag":"⚡ 快手"},{"id":"D005","name":"黄瓜炒蛋","cat":"蛋类","price":16.0,"time":10.0,"diff":"简单","kcal":350.0,"protein":15.0,"fat":10.0,"carb":4.2,"cost":6.8,"profit":15.38,"desc":"清爽可口，夏日必备","ingredients":[{"type":"I-食材","name":"鸡蛋","qty":2.0,"unit":"个"},{"type":"I-食材","name":"黄瓜","qty":1.0,"unit":"根"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"盐","qty":2.0,"unit":"克"}],"scene":"标准午餐","tag":"⚡ 快手"},{"id":"D006","name":"苦瓜炒蛋","cat":"蛋类","price":18.0,"time":12.0,"diff":"中等","kcal":350.0,"protein":15.0,"fat":10.0,"carb":5.2,"cost":9.8,"profit":17.38,"desc":"清热去火，夏日佳品","ingredients":[{"type":"I-食材","name":"鸡蛋","qty":2.0,"unit":"个"},{"type":"I-食材","name":"苦瓜","qty":1.0,"unit":"根"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"盐","qty":2.0,"unit":"克"}],"scene":"标准午餐","tag":""},{"id":"D007","name":"虾皮蒸蛋","cat":"蛋类","price":18.0,"time":15.0,"diff":"简单","kcal":195.0,"protein":14.0,"fat":10.0,"carb":1.2,"cost":2.8,"profit":17.84,"desc":"嫩滑细腻，补钙首选","ingredients":[{"type":"I-食材","name":"鸡蛋","qty":2.0,"unit":"个"},{"type":"S-调料","name":"食用油","qty":0.5,"unit":"勺"},{"type":"S-调料","name":"盐","qty":1.0,"unit":"克"}],"scene":"低卡轻食","tag":"🔥 低卡 ⚡ 快手"},{"id":"D008","name":"皮蛋豆腐","cat":"蛋类","price":16.0,"time":10.0,"diff":"简单","kcal":254.0,"protein":24.0,"fat":15.0,"carb":5.0,"cost":11.5,"profit":15.0,"desc":"凉菜经典，清爽开胃","ingredients":[{"type":"I-食材","name":"北豆腐","qty":1.0,"unit":"块"},{"type":"I-食材","name":"皮蛋","qty":2.0,"unit":"个"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"蒜","qty":2.0,"unit":"瓣"}],"scene":"标准午餐","tag":"🔥 低卡 ⚡ 快手"},{"id":"D009","name":"咸蛋黄焗南瓜","cat":"蛋类","price":20.0,"time":15.0,"diff":"中等","kcal":445.0,"protein":15.0,"fat":10.0,"carb":6.2,"cost":9.8,"profit":19.08,"desc":"色泽金黄，咸香软糯","ingredients":[{"type":"I-食材","name":"鸡蛋","qty":2.0,"unit":"个"},{"type":"I-食材","name":"南瓜","qty":1.0,"unit":"斤"},{"type":"S-调料","name":"食用油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"盐","qty":2.0,"unit":"克"}],"scene":"丰盛正餐","tag":""},{"id":"D010","name":"蛋炒饭","cat":"主食类","price":15.0,"time":10.0,"diff":"简单","kcal":456.0,"protein":16.0,"fat":10.0,"carb":29.2,"cost":32.8,"profit":13.78,"desc":"剩饭利用，百吃不厌","ingredients":[{"type":"I-食材","name":"鸡蛋","qty":2.0,"unit":"个"},{"type":"I-食材","name":"米饭","qty":1.0,"unit":"碗"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"盐","qty":2.0,"unit":"克"},{"type":"S-调料","name":"葱","qty":2.0,"unit":"根"}],"scene":"丰盛正餐","tag":"🍚 主食 ⚡ 快手"},{"id":"D011","name":"红烧肉","cat":"猪肉类","price":38.0,"time":60.0,"diff":"中等","kcal":872.0,"protein":23.5,"fat":40.5,"carb":30.0,"cost":63.0,"profit":33.95,"desc":"肥而不腻，入口即化","ingredients":[{"type":"I-食材","name":"五花肉","qty":1.5,"unit":"斤"},{"type":"I-食材","name":"土豆","qty":2.0,"unit":"个"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"老抽","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"冰糖","qty":3.0,"unit":"块"},{"type":"S-调料","name":"八角","qty":2.0,"unit":"个"},{"type":"S-调料","name":"姜","qty":5.0,"unit":"克"},{"type":"S-调料","name":"蒜","qty":3.0,"unit":"瓣"}],"scene":"大份硬菜","tag":"🥩 荤菜"},{"id":"D012","name":"糖醋里脊","cat":"猪肉类","price":32.0,"time":25.0,"diff":"中等","kcal":489.0,"protein":17.0,"fat":8.0,"carb":0,"cost":20.0,"profit":29.55,"desc":"外酥里嫩，酸甜可口","ingredients":[{"type":"I-食材","name":"瘦肉","qty":1.0,"unit":"斤"},{"type":"S-调料","name":"食用油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"糖/白砂糖","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"姜","qty":3.0,"unit":"克"},{"type":"S-调料","name":"淀粉","qty":2.0,"unit":"勺"}],"scene":"丰盛正餐","tag":"🥩 荤菜"},{"id":"D013","name":"锅包肉","cat":"猪肉类","price":35.0,"time":30.0,"diff":"中等","kcal":599.0,"protein":17.0,"fat":8.0,"carb":0,"cost":20.0,"profit":31.9,"desc":"酸甜酥脆，东北名菜","ingredients":[{"type":"I-食材","name":"瘦肉","qty":1.0,"unit":"斤"},{"type":"S-调料","name":"食用油","qty":4.0,"unit":"勺"},{"type":"S-调料","name":"糖/白砂糖","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"蒜","qty":2.0,"unit":"瓣"},{"type":"S-调料","name":"面粉（挂糊）","qty":3.0,"unit":"勺"}],"scene":"丰盛正餐","tag":"🥩 荤菜"},{"id":"D014","name":"京酱肉丝","cat":"猪肉类","price":28.0,"time":20.0,"diff":"中等","kcal":351.0,"protein":14.6,"fat":6.4,"carb":9.0,"cost":27.0,"profit":26.55,"desc":"咸甜适中，卷饼绝配","ingredients":[{"type":"I-食材","name":"瘦肉","qty":0.8,"unit":"斤"},{"type":"I-食材","name":"洋葱","qty":1.0,"unit":"个"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"鸡精","qty":2.0,"unit":"克"},{"type":"S-调料","name":"姜","qty":3.0,"unit":"克"}],"scene":"标准午餐","tag":"🥩 荤菜"},{"id":"D015","name":"鱼香肉丝","cat":"猪肉类","price":26.0,"time":20.0,"diff":"中等","kcal":323.0,"protein":18.6,"fat":6.4,"carb":29.0,"cost":50.0,"profit":24.5,"desc":"酸甜微辣，下饭神器","ingredients":[{"type":"I-食材","name":"瘦肉","qty":0.8,"unit":"斤"},{"type":"I-食材","name":"土豆","qty":1.0,"unit":"个"},{"type":"I-食材","name":"青椒","qty":2.0,"unit":"个"},{"type":"I-食材","name":"胡萝卜","qty":1.0,"unit":"根"},{"type":"S-调料","name":"豆瓣酱","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"糖/白砂糖","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"淀粉","qty":1.0,"unit":"勺"}],"scene":"标准午餐","tag":"🥩 荤菜"},{"id":"D016","name":"回锅肉","cat":"猪肉类","price":30.0,"time":25.0,"diff":"中等","kcal":656.5,"protein":14.5,"fat":27.0,"carb":10.5,"cost":33.25,"profit":27.75,"desc":"川味经典，肥而不腻","ingredients":[{"type":"I-食材","name":"五花肉","qty":1.0,"unit":"斤"},{"type":"I-食材","name":"洋葱","qty":1.0,"unit":"个"},{"type":"I-食材","name":"大白菜","qty":0.5,"unit":"斤"},{"type":"S-调料","name":"食用油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"豆瓣酱","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"姜","qty":3.0,"unit":"克"}],"scene":"大份硬菜","tag":"🥩 荤菜"},{"id":"D017","name":"青椒肉丝","cat":"猪肉类","price":22.0,"time":15.0,"diff":"简单","kcal":340.0,"protein":13.2,"fat":4.8,"carb":12.0,"cost":27.0,"profit":20.78,"desc":"家常快手菜，脆嫩爽口","ingredients":[{"type":"I-食材","name":"瘦肉","qty":0.6,"unit":"斤"},{"type":"I-食材","name":"青椒","qty":3.0,"unit":"个"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"盐","qty":2.0,"unit":"克"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"}],"scene":"标准午餐","tag":"🥩 荤菜 ⚡ 快手"},{"id":"D018","name":"木须肉","cat":"猪肉类","price":25.0,"time":20.0,"diff":"中等","kcal":448.5,"protein":24.0,"fat":14.0,"carb":9.2,"cost":24.3,"profit":23.8,"desc":"荤素搭配，营养丰富","ingredients":[{"type":"I-食材","name":"鸡蛋","qty":2.0,"unit":"个"},{"type":"I-食材","name":"瘦肉","qty":0.5,"unit":"斤"},{"type":"I-食材","name":"胡萝卜","qty":1.0,"unit":"根"},{"type":"I-食材","name":"木耳","qty":0.5,"unit":"两"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"}],"scene":"丰盛正餐","tag":"🥩 荤菜"},{"id":"D019","name":"蒜泥白肉","cat":"猪肉类","price":30.0,"time":40.0,"diff":"中等","kcal":483.0,"protein":19.5,"fat":40.5,"carb":0,"cost":30.0,"profit":27.3,"desc":"蒜香浓郁，肥而不腻","ingredients":[{"type":"I-食材","name":"五花肉","qty":1.5,"unit":"斤"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"姜","qty":10.0,"unit":"克"},{"type":"S-调料","name":"蒜","qty":4.0,"unit":"瓣"}],"scene":"丰盛正餐","tag":"🥩 荤菜"},{"id":"D020","name":"酸菜粉丝白肉","cat":"猪肉类","price":28.0,"time":30.0,"diff":"中等","kcal":475.0,"protein":13.0,"fat":27.0,"carb":0,"cost":20.0,"profit":27.12,"desc":"东北风味，酸香开胃","ingredients":[{"type":"I-食材","name":"五花肉","qty":1.0,"unit":"斤"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"盐","qty":3.0,"unit":"克"},{"type":"S-调料","name":"姜","qty":5.0,"unit":"克"}],"scene":"丰盛正餐","tag":"🥩 荤菜"},{"id":"D021","name":"梅菜扣肉","cat":"猪肉类","price":35.0,"time":90.0,"diff":"复杂","kcal":737.0,"protein":26.0,"fat":54.0,"carb":0,"cost":40.0,"profit":31.45,"desc":"软糯入味，肥而不腻","ingredients":[{"type":"I-食材","name":"五花肉","qty":2.0,"unit":"斤"},{"type":"S-调料","name":"生抽/酱油","qty":4.0,"unit":"勺"},{"type":"S-调料","name":"老抽","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"冰糖","qty":5.0,"unit":"块"},{"type":"S-调料","name":"姜","qty":5.0,"unit":"克"}],"scene":"大份硬菜","tag":"🥩 荤菜"},{"id":"D022","name":"叉烧肉","cat":"猪肉类","price":32.0,"time":40.0,"diff":"中等","kcal":206.0,"protein":17.0,"fat":8.0,"carb":0,"cost":20.0,"profit":30.3,"desc":"粤菜经典，蜜汁香甜","ingredients":[{"type":"I-食材","name":"瘦肉","qty":1.0,"unit":"斤"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"糖/白砂糖","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"叉烧酱","qty":2.0,"unit":"勺"}],"scene":"标准午餐","tag":"🥩 荤菜 🔥 低卡"},{"id":"D023","name":"红烧排骨","cat":"猪肉类","price":38.0,"time":50.0,"diff":"中等","kcal":551.0,"protein":25.0,"fat":24.0,"carb":30.0,"cost":70.5,"profit":34.75,"desc":"酱香浓郁，肉质酥烂","ingredients":[{"type":"I-食材","name":"猪排骨","qty":1.5,"unit":"斤"},{"type":"I-食材","name":"土豆","qty":2.0,"unit":"个"},{"type":"S-调料","name":"生抽/酱油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"老抽","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"冰糖","qty":3.0,"unit":"块"},{"type":"S-调料","name":"姜","qty":5.0,"unit":"克"},{"type":"S-调料","name":"蒜","qty":3.0,"unit":"瓣"}],"scene":"丰盛正餐","tag":"🥩 荤菜"},{"id":"D024","name":"糖醋排骨","cat":"猪肉类","price":36.0,"time":35.0,"diff":"中等","kcal":666.0,"protein":21.0,"fat":24.0,"carb":0,"cost":37.5,"profit":33.4,"desc":"酸甜开胃，老少皆宜","ingredients":[{"type":"I-食材","name":"猪排骨","qty":1.5,"unit":"斤"},{"type":"S-调料","name":"食用油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"糖/白砂糖","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"淀粉","qty":2.0,"unit":"勺"}],"scene":"大份硬菜","tag":"🥩 荤菜"},{"id":"D025","name":"酱大骨","cat":"猪肉类","price":28.0,"time":120.0,"diff":"复杂","kcal":589.0,"protein":36.0,"fat":38.0,"carb":0,"cost":24.0,"profit":24.7,"desc":"酱香浓郁，骨髓丰盈","ingredients":[{"type":"I-食材","name":"猪蹄","qty":2.0,"unit":"个"},{"type":"S-调料","name":"生抽/酱油","qty":5.0,"unit":"勺"},{"type":"S-调料","name":"老抽","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"八角","qty":3.0,"unit":"个"},{"type":"S-调料","name":"桂皮","qty":2.0,"unit":"片"},{"type":"S-调料","name":"姜","qty":10.0,"unit":"克"}],"scene":"丰盛正餐","tag":"🥩 荤菜"},{"id":"D026","name":"红烧猪蹄","cat":"猪肉类","price":35.0,"time":90.0,"diff":"中等","kcal":599.0,"protein":36.0,"fat":38.0,"carb":0,"cost":24.0,"profit":32.65,"desc":"胶质丰富，养颜美容","ingredients":[{"type":"I-食材","name":"猪蹄","qty":2.0,"unit":"个"},{"type":"S-调料","name":"生抽/酱油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"老抽","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"冰糖","qty":3.0,"unit":"块"},{"type":"S-调料","name":"姜","qty":5.0,"unit":"克"}],"scene":"丰盛正餐","tag":"🥩 荤菜"},{"id":"D027","name":"猪蹄炖黄豆","cat":"猪肉类","price":30.0,"time":100.0,"diff":"中等","kcal":529.0,"protein":36.0,"fat":38.0,"carb":0,"cost":24.0,"profit":28.85,"desc":"美容养颜，汤浓味美","ingredients":[{"type":"I-食材","name":"猪蹄","qty":2.0,"unit":"个"},{"type":"S-调料","name":"生抽/酱油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"姜","qty":5.0,"unit":"克"}],"scene":"丰盛正餐","tag":"🥩 荤菜"},{"id":"D028","name":"干锅肥肠","cat":"猪肉类","price":32.0,"time":40.0,"diff":"中等","kcal":575.0,"protein":15.0,"fat":14.0,"carb":17.0,"cost":36.0,"profit":29.9,"desc":"香辣劲道，下酒佳品","ingredients":[{"type":"I-食材","name":"猪大肠","qty":1.0,"unit":"斤"},{"type":"I-食材","name":"青椒","qty":2.0,"unit":"个"},{"type":"I-食材","name":"洋葱","qty":1.0,"unit":"个"},{"type":"S-调料","name":"食用油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"豆瓣酱","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"干辣椒","qty":3.0,"unit":"克"}],"scene":"丰盛正餐","tag":"🥩 荤菜"},{"id":"D029","name":"熘肝尖","cat":"猪肉类","price":25.0,"time":15.0,"diff":"中等","kcal":155.0,"protein":14.6,"fat":3.2,"carb":6.0,"cost":17.1,"profit":24.05,"desc":"嫩滑爽口，补铁佳品","ingredients":[{"type":"I-食材","name":"猪肝","qty":0.8,"unit":"斤"},{"type":"I-食材","name":"胡萝卜","qty":1.0,"unit":"根"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"姜","qty":3.0,"unit":"克"},{"type":"S-调料","name":"淀粉","qty":1.0,"unit":"勺"}],"scene":"低卡轻食","tag":"🥩 荤菜 🔥 低卡"},{"id":"D030","name":"爆炒腰花","cat":"猪肉类","price":28.0,"time":20.0,"diff":"中等","kcal":601.0,"protein":38.0,"fat":38.0,"carb":8.0,"cost":34.0,"profit":26.2,"desc":"形似麦穗，脆嫩鲜香","ingredients":[{"type":"I-食材","name":"猪蹄","qty":2.0,"unit":"个"},{"type":"I-食材","name":"青椒","qty":2.0,"unit":"个"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"豆瓣酱","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"干辣椒","qty":3.0,"unit":"克"}],"scene":"大份硬菜","tag":"🥩 荤菜"},{"id":"D031","name":"腊肉炒蒜苗","cat":"猪肉类","price":26.0,"time":15.0,"diff":"简单","kcal":440.0,"protein":12.6,"fat":17.6,"carb":12.0,"cost":42.0,"profit":25.4,"desc":"烟熏风味，咸香下饭","ingredients":[{"type":"I-食材","name":"茄子","qty":3.0,"unit":"根"},{"type":"I-食材","name":"腊肉","qty":0.8,"unit":"斤"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"}],"scene":"丰盛正餐","tag":"🥩 荤菜 ⚡ 快手"},{"id":"D032","name":"培根金针菇卷","cat":"猪肉类","price":22.0,"time":20.0,"diff":"简单","kcal":188.0,"protein":10.0,"fat":12.0,"carb":3.0,"cost":18.0,"profit":21.7,"desc":"培根焦香，金针菇滑嫩","ingredients":[{"type":"I-食材","name":"金针菇","qty":1.0,"unit":"袋"},{"type":"I-食材","name":"培根","qty":4.0,"unit":"片"},{"type":"S-调料","name":"生抽/酱油","qty":1.0,"unit":"勺"}],"scene":"低卡轻食","tag":"🥩 荤菜 🔥 低卡 ⚡ 快手"},{"id":"D033","name":"肉末蒸蛋","cat":"猪肉类","price":18.0,"time":20.0,"diff":"简单","kcal":200.0,"protein":19.1,"fat":12.4,"carb":1.2,"cost":8.8,"profit":17.69,"desc":"嫩滑细腻，宝宝最爱","ingredients":[{"type":"I-食材","name":"鸡蛋","qty":2.0,"unit":"个"},{"type":"I-食材","name":"瘦肉","qty":0.3,"unit":"斤"},{"type":"S-调料","name":"盐","qty":1.0,"unit":"克"},{"type":"S-调料","name":"生抽/酱油","qty":1.0,"unit":"勺"}],"scene":"低卡轻食","tag":"🥩 荤菜 🔥 低卡 ⚡ 快手"},{"id":"D034","name":"肉末茄子","cat":"猪肉类","price":20.0,"time":20.0,"diff":"中等","kcal":416.0,"protein":10.5,"fat":4.0,"carb":8.0,"cost":22.0,"profit":18.2,"desc":"软糯入味，超级下饭","ingredients":[{"type":"I-食材","name":"瘦肉","qty":0.5,"unit":"斤"},{"type":"I-食材","name":"茄子","qty":2.0,"unit":"根"},{"type":"S-调料","name":"食用油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"糖/白砂糖","qty":1.0,"unit":"勺"}],"scene":"丰盛正餐","tag":"🥩 荤菜"},{"id":"D035","name":"肉末豆腐","cat":"猪肉类","price":18.0,"time":15.0,"diff":"简单","kcal":262.0,"protein":14.8,"fat":8.2,"carb":3.0,"cost":13.5,"profit":17.1,"desc":"嫩滑可口，经济实惠","ingredients":[{"type":"I-食材","name":"瘦肉","qty":0.4,"unit":"斤"},{"type":"I-食材","name":"北豆腐","qty":1.0,"unit":"块"},{"type":"S-调料","name":"食用油","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"}],"scene":"标准午餐","tag":"🥩 荤菜 🔥 低卡 ⚡ 快手"},{"id":"D036","name":"麻婆豆腐","cat":"豆腐类","price":20.0,"time":20.0,"diff":"中等","kcal":262.0,"protein":13.1,"fat":7.4,"carb":3.0,"cost":11.5,"profit":18.1,"desc":"川味经典，麻辣鲜香","ingredients":[{"type":"I-食材","name":"瘦肉","qty":0.3,"unit":"斤"},{"type":"I-食材","name":"北豆腐","qty":1.0,"unit":"块"},{"type":"S-调料","name":"豆瓣酱","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"花椒","qty":2.0,"unit":"克"},{"type":"S-调料","name":"辣椒油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"生粉/玉米淀粉","qty":1.0,"unit":"勺"}],"scene":"标准午餐","tag":"🥬 素菜 🔥 低卡"},{"id":"D037","name":"小炒肉","cat":"猪肉类","price":25.0,"time":15.0,"diff":"简单","kcal":373.0,"protein":16.6,"fat":6.4,"carb":14.0,"cost":33.5,"profit":23.8,"desc":"香辣开胃，下饭神器","ingredients":[{"type":"I-食材","name":"瘦肉","qty":0.8,"unit":"斤"},{"type":"I-食材","name":"青椒","qty":2.0,"unit":"个"},{"type":"I-食材","name":"胡萝卜","qty":1.0,"unit":"根"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"}],"scene":"标准午餐","tag":"🥩 荤菜 ⚡ 快手"},{"id":"D038","name":"腐乳肉","cat":"猪肉类","price":30.0,"time":60.0,"diff":"中等","kcal":501.0,"protein":19.5,"fat":40.5,"carb":0,"cost":30.0,"profit":28.25,"desc":"腐乳风味，软糯咸香","ingredients":[{"type":"I-食材","name":"五花肉","qty":1.5,"unit":"斤"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"甜面酱","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"姜","qty":5.0,"unit":"克"}],"scene":"丰盛正餐","tag":"🥩 荤菜"},{"id":"D039","name":"东坡肉","cat":"猪肉类","price":40.0,"time":120.0,"diff":"复杂","kcal":737.0,"protein":26.0,"fat":54.0,"carb":0,"cost":40.0,"profit":36.45,"desc":"杭帮名菜，入口即化","ingredients":[{"type":"I-食材","name":"五花肉","qty":2.0,"unit":"斤"},{"type":"S-调料","name":"生抽/酱油","qty":4.0,"unit":"勺"},{"type":"S-调料","name":"老抽","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"冰糖","qty":5.0,"unit":"块"},{"type":"S-调料","name":"姜","qty":5.0,"unit":"克"}],"scene":"大份硬菜","tag":"🥩 荤菜"},{"id":"D040","name":"蒜香排骨","cat":"猪肉类","price":35.0,"time":35.0,"diff":"中等","kcal":598.0,"protein":21.0,"fat":24.0,"carb":0,"cost":37.5,"profit":32.9,"desc":"蒜香浓郁，外酥里嫩","ingredients":[{"type":"I-食材","name":"猪排骨","qty":1.5,"unit":"斤"},{"type":"S-调料","name":"食用油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"蒜","qty":1.0,"unit":"头"}],"scene":"丰盛正餐","tag":"🥩 荤菜"},{"id":"D041","name":"宫保鸡丁","cat":"鸡肉类","price":28.0,"time":20.0,"diff":"中等","kcal":251.0,"protein":22.0,"fat":3.0,"carb":14.0,"cost":31.5,"profit":25.8,"desc":"酸甜微辣，经典川菜","ingredients":[{"type":"I-食材","name":"鸡胸肉","qty":1.0,"unit":"斤"},{"type":"I-食材","name":"青椒","qty":2.0,"unit":"个"},{"type":"I-食材","name":"胡萝卜","qty":1.0,"unit":"根"},{"type":"S-调料","name":"糖/白砂糖","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"花椒","qty":2.0,"unit":"克"},{"type":"S-调料","name":"干辣椒","qty":3.0,"unit":"克"},{"type":"S-调料","name":"生粉/玉米淀粉","qty":1.0,"unit":"勺"}],"scene":"标准午餐","tag":"🥩 荤菜 🔥 低卡"},{"id":"D042","name":"辣子鸡","cat":"鸡肉类","price":30.0,"time":25.0,"diff":"中等","kcal":638.0,"protein":18.0,"fat":14.0,"carb":0,"cost":35.0,"profit":25.9,"desc":"香辣酥脆，川味十足","ingredients":[{"type":"I-食材","name":"整鸡","qty":1.0,"unit":"只"},{"type":"S-调料","name":"食用油","qty":4.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"干辣椒","qty":10.0,"unit":"克"},{"type":"S-调料","name":"辣椒粉","qty":3.0,"unit":"克"}],"scene":"大份硬菜","tag":"🥩 荤菜"},{"id":"D043","name":"大盘鸡","cat":"鸡肉类","price":35.0,"time":45.0,"diff":"中等","kcal":979.0,"protein":36.0,"fat":21.0,"carb":57.0,"cost":117.0,"profit":31.9,"desc":"新疆名菜，量大过瘾","ingredients":[{"type":"I-食材","name":"整鸡","qty":1.5,"unit":"只"},{"type":"I-食材","name":"土豆","qty":3.0,"unit":"个"},{"type":"I-食材","name":"青椒","qty":3.0,"unit":"个"},{"type":"S-调料","name":"食用油","qty":4.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"干辣椒","qty":5.0,"unit":"克"}],"scene":"大份硬菜","tag":"🥩 荤菜"},{"id":"D044","name":"黄焖鸡","cat":"鸡肉类","price":28.0,"time":30.0,"diff":"中等","kcal":514.0,"protein":25.0,"fat":3.0,"carb":38.0,"cost":57.0,"profit":25.7,"desc":"酱香浓郁，鸡肉嫩滑","ingredients":[{"type":"I-食材","name":"鸡胸肉","qty":1.0,"unit":"斤"},{"type":"I-食材","name":"土豆","qty":2.0,"unit":"个"},{"type":"I-食材","name":"青椒","qty":2.0,"unit":"个"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"照烧酱","qty":2.0,"unit":"勺"}],"scene":"丰盛正餐","tag":"🥩 荤菜"},{"id":"D045","name":"三杯鸡","cat":"鸡肉类","price":30.0,"time":35.0,"diff":"中等","kcal":520.0,"protein":18.0,"fat":14.0,"carb":0,"cost":35.0,"profit":26.5,"desc":"台式风味，米酒飘香","ingredients":[{"type":"I-食材","name":"整鸡","qty":1.0,"unit":"只"},{"type":"S-调料","name":"食用油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"八角","qty":2.0,"unit":"个"},{"type":"S-调料","name":"蒜","qty":5.0,"unit":"瓣"}],"scene":"丰盛正餐","tag":"🥩 荤菜"},{"id":"D046","name":"口水鸡","cat":"鸡肉类","price":26.0,"time":30.0,"diff":"中等","kcal":348.0,"protein":18.0,"fat":14.0,"carb":0,"cost":35.0,"profit":21.9,"desc":"麻辣鲜香，凉菜之王","ingredients":[{"type":"I-食材","name":"整鸡","qty":1.0,"unit":"只"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"花椒","qty":3.0,"unit":"克"},{"type":"S-调料","name":"干辣椒","qty":5.0,"unit":"克"},{"type":"S-调料","name":"辣椒油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"蒜","qty":3.0,"unit":"瓣"}],"scene":"标准午餐","tag":"🥩 荤菜"},{"id":"D047","name":"白切鸡","cat":"鸡肉类","price":35.0,"time":45.0,"diff":"简单","kcal":235.0,"protein":18.0,"fat":14.0,"carb":0,"cost":35.0,"profit":33.0,"desc":"皮爽肉滑，原汁原味","ingredients":[{"type":"I-食材","name":"整鸡","qty":1.0,"unit":"只"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"姜","qty":10.0,"unit":"克"},{"type":"S-调料","name":"葱","qty":3.0,"unit":"根"}],"scene":"标准午餐","tag":"🥩 荤菜 🔥 低卡 ⚡ 快手"},{"id":"D048","name":"烧鸡","cat":"鸡肉类","price":38.0,"time":90.0,"diff":"中等","kcal":527.0,"protein":18.0,"fat":14.0,"carb":0,"cost":35.0,"profit":35.05,"desc":"皮脆肉嫩，香气四溢","ingredients":[{"type":"I-食材","name":"整鸡","qty":1.0,"unit":"只"},{"type":"S-调料","name":"食用油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":4.0,"unit":"勺"},{"type":"S-调料","name":"老抽","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"姜","qty":5.0,"unit":"克"}],"scene":"丰盛正餐","tag":"🥩 荤菜"},{"id":"D049","name":"可乐鸡翅","cat":"鸡肉类","price":28.0,"time":25.0,"diff":"简单","kcal":376.0,"protein":17.0,"fat":12.0,"carb":0,"cost":18.0,"profit":26.8,"desc":"甜香可口，孩子最爱","ingredients":[{"type":"I-食材","name":"鸡翅","qty":1.0,"unit":"斤"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"}],"scene":"标准午餐","tag":"🥩 荤菜 ⚡ 快手"},{"id":"D050","name":"红烧鸡翅","cat":"鸡肉类","price":26.0,"time":25.0,"diff":"简单","kcal":254.0,"protein":17.0,"fat":12.0,"carb":0,"cost":18.0,"profit":24.2,"desc":"酱香浓郁，色泽红亮","ingredients":[{"type":"I-食材","name":"鸡翅","qty":1.0,"unit":"斤"},{"type":"S-调料","name":"生抽/酱油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"老抽","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"冰糖","qty":2.0,"unit":"块"}],"scene":"标准午餐","tag":"🥩 荤菜 🔥 低卡 ⚡ 快手"},{"id":"D051","name":"香辣鸡翅","cat":"鸡肉类","price":28.0,"time":25.0,"diff":"中等","kcal":229.0,"protein":17.0,"fat":12.0,"carb":0,"cost":18.0,"profit":26.2,"desc":"外酥里辣，香气扑鼻","ingredients":[{"type":"I-食材","name":"鸡翅","qty":1.0,"unit":"斤"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"干辣椒","qty":5.0,"unit":"克"},{"type":"S-调料","name":"辣椒粉","qty":2.0,"unit":"克"}],"scene":"标准午餐","tag":"🥩 荤菜 🔥 低卡"},{"id":"D052","name":"炸鸡排","cat":"鸡肉类","price":22.0,"time":20.0,"diff":"简单","kcal":565.0,"protein":19.0,"fat":3.0,"carb":0,"cost":14.0,"profit":19.9,"desc":"金黄酥脆，大人小孩都爱","ingredients":[{"type":"I-食材","name":"鸡胸肉","qty":1.0,"unit":"斤"},{"type":"S-调料","name":"食用油","qty":4.0,"unit":"勺"},{"type":"S-调料","name":"面粉（挂糊）","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"面包糠","qty":3.0,"unit":"勺"}],"scene":"丰盛正餐","tag":"🥩 荤菜 ⚡ 快手"},{"id":"D053","name":"鸡米花","cat":"鸡肉类","price":20.0,"time":20.0,"diff":"简单","kcal":440.0,"protein":15.2,"fat":2.4,"carb":0,"cost":11.2,"profit":18.8,"desc":"外酥里嫩，追剧必备","ingredients":[{"type":"I-食材","name":"鸡胸肉","qty":0.8,"unit":"斤"},{"type":"S-调料","name":"食用油","qty":4.0,"unit":"勺"}],"scene":"丰盛正餐","tag":"🥩 荤菜 ⚡ 快手"},{"id":"D054","name":"鸡胗爆炒","cat":"鸡肉类","price":22.0,"time":15.0,"diff":"简单","kcal":351.0,"protein":19.0,"fat":4.0,"carb":9.0,"cost":26.0,"profit":20.2,"desc":"脆嫩爽口，下酒好菜","ingredients":[{"type":"I-食材","name":"鸡胗","qty":1.0,"unit":"斤"},{"type":"I-食材","name":"洋葱","qty":1.0,"unit":"个"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"干辣椒","qty":3.0,"unit":"克"}],"scene":"标准午餐","tag":"🥩 荤菜 ⚡ 快手"},{"id":"D055","name":"凤爪炖汤","cat":"鸡肉类","price":20.0,"time":60.0,"diff":"中等","kcal":125.0,"protein":19.0,"fat":6.0,"carb":0,"cost":10.0,"profit":19.75,"desc":"胶质丰富，美容养颜","ingredients":[{"type":"I-食材","name":"鸡爪","qty":1.0,"unit":"斤"},{"type":"S-调料","name":"姜","qty":5.0,"unit":"克"}],"scene":"低卡轻食","tag":"🥩 荤菜 🔥 低卡"},{"id":"D056","name":"鸡腿炖土豆","cat":"鸡肉类","price":25.0,"time":40.0,"diff":"中等","kcal":494.0,"protein":21.0,"fat":9.0,"carb":30.0,"cost":46.0,"profit":23.5,"desc":"汤浓肉香，冬季暖身","ingredients":[{"type":"I-食材","name":"鸡腿肉","qty":1.0,"unit":"斤"},{"type":"I-食材","name":"土豆","qty":2.0,"unit":"个"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":3.0,"unit":"勺"}],"scene":"丰盛正餐","tag":"🥩 荤菜"},{"id":"D057","name":"鸡肉丸子汤","cat":"鸡肉类","price":20.0,"time":30.0,"diff":"简单","kcal":94.5,"protein":15.5,"fat":2.4,"carb":0.9,"cost":12.55,"profit":19.6,"desc":"清淡鲜美，营养丰富","ingredients":[{"type":"I-食材","name":"鸡胸肉","qty":0.8,"unit":"斤"},{"type":"I-食材","name":"大白菜","qty":0.3,"unit":"斤"},{"type":"S-调料","name":"生抽/酱油","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"姜","qty":2.0,"unit":"克"}],"scene":"低卡轻食","tag":"🥩 荤菜 🔥 低卡 ⚡ 快手"},{"id":"D058","name":"麻辣鸡丝","cat":"鸡肉类","price":22.0,"time":20.0,"diff":"简单","kcal":153.0,"protein":15.2,"fat":2.4,"carb":0,"cost":11.2,"profit":20.1,"desc":"麻辣鲜香，开胃凉菜","ingredients":[{"type":"I-食材","name":"鸡胸肉","qty":0.8,"unit":"斤"},{"type":"S-调料","name":"醋/陈醋","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"花椒","qty":3.0,"unit":"克"},{"type":"S-调料","name":"干辣椒","qty":3.0,"unit":"克"},{"type":"S-调料","name":"辣椒油","qty":1.0,"unit":"勺"}],"scene":"低卡轻食","tag":"🥩 荤菜 🔥 低卡 ⚡ 快手"},{"id":"D059","name":"土豆烧牛肉","cat":"牛肉类","price":38.0,"time":60.0,"diff":"中等","kcal":429.0,"protein":26.0,"fat":5.0,"carb":45.0,"cost":94.5,"profit":35.65,"desc":"经典搭配，牛肉软烂","ingredients":[{"type":"I-食材","name":"牛里脊","qty":1.0,"unit":"斤"},{"type":"I-食材","name":"土豆","qty":3.0,"unit":"个"},{"type":"S-调料","name":"生抽/酱油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"老抽","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"冰糖","qty":3.0,"unit":"块"},{"type":"S-调料","name":"姜","qty":5.0,"unit":"克"}],"scene":"丰盛正餐","tag":"🥩 荤菜"},{"id":"D060","name":"番茄炖牛肉","cat":"牛肉类","price":40.0,"time":90.0,"diff":"中等","kcal":329.0,"protein":20.0,"fat":20.0,"carb":12.0,"cost":55.2,"profit":39.25,"desc":"酸甜开胃，牛肉酥软","ingredients":[{"type":"I-食材","name":"牛腩","qty":1.0,"unit":"斤"},{"type":"I-食材","name":"番茄","qty":4.0,"unit":"个"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"姜","qty":3.0,"unit":"克"}],"scene":"标准午餐","tag":"🥩 荤菜"},{"id":"D061","name":"红烧牛肉","cat":"牛肉类","price":42.0,"time":90.0,"diff":"中等","kcal":277.0,"protein":20.0,"fat":5.0,"carb":0,"cost":45.0,"profit":38.45,"desc":"酱香浓郁，肉质软烂","ingredients":[{"type":"I-食材","name":"牛里脊","qty":1.0,"unit":"斤"},{"type":"S-调料","name":"生抽/酱油","qty":4.0,"unit":"勺"},{"type":"S-调料","name":"老抽","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"冰糖","qty":5.0,"unit":"块"},{"type":"S-调料","name":"姜","qty":5.0,"unit":"克"}],"scene":"标准午餐","tag":"🥩 荤菜 🔥 低卡"},{"id":"D062","name":"咖喱牛肉","cat":"牛肉类","price":36.0,"time":50.0,"diff":"中等","kcal":530.0,"protein":24.0,"fat":5.0,"carb":30.0,"cost":78.0,"profit":35.1,"desc":"异域风味，浓郁香醇","ingredients":[{"type":"I-食材","name":"牛里脊","qty":1.0,"unit":"斤"},{"type":"I-食材","name":"土豆","qty":2.0,"unit":"个"},{"type":"S-调料","name":"食用油","qty":3.0,"unit":"勺"}],"scene":"丰盛正餐","tag":"🥩 荤菜"},{"id":"D063","name":"青椒炒牛肉","cat":"牛肉类","price":32.0,"time":15.0,"diff":"简单","kcal":352.0,"protein":19.0,"fat":4.0,"carb":12.0,"cost":51.0,"profit":30.8,"desc":"鲜嫩爽口，色泽诱人","ingredients":[{"type":"I-食材","name":"牛里脊","qty":0.8,"unit":"斤"},{"type":"I-食材","name":"青椒","qty":3.0,"unit":"个"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"}],"scene":"标准午餐","tag":"🥩 荤菜 ⚡ 快手"},{"id":"D064","name":"黑椒牛柳","cat":"牛肉类","price":35.0,"time":20.0,"diff":"中等","kcal":347.0,"protein":17.0,"fat":4.0,"carb":9.0,"cost":47.0,"profit":33.2,"desc":"西餐做法，黑椒香浓","ingredients":[{"type":"I-食材","name":"牛里脊","qty":0.8,"unit":"斤"},{"type":"I-食材","name":"洋葱","qty":1.0,"unit":"个"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"黑胡椒","qty":3.0,"unit":"克"}],"scene":"标准午餐","tag":"🥩 荤菜"},{"id":"D065","name":"干煸牛肉丝","cat":"牛肉类","price":30.0,"time":20.0,"diff":"中等","kcal":461.0,"protein":17.0,"fat":4.0,"carb":9.0,"cost":47.0,"profit":27.5,"desc":"香辣劲道，下饭神器","ingredients":[{"type":"I-食材","name":"牛里脊","qty":0.8,"unit":"斤"},{"type":"I-食材","name":"洋葱","qty":1.0,"unit":"个"},{"type":"S-调料","name":"食用油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"豆瓣酱","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"干辣椒","qty":5.0,"unit":"克"}],"scene":"丰盛正餐","tag":"🥩 荤菜"},{"id":"D066","name":"水煮牛肉","cat":"牛肉类","price":35.0,"time":25.0,"diff":"中等","kcal":379.5,"protein":16.3,"fat":15.0,"carb":6.9,"cost":33.85,"profit":31.8,"desc":"川味经典，麻辣鲜香","ingredients":[{"type":"I-食材","name":"大白菜","qty":0.3,"unit":"斤"},{"type":"I-食材","name":"胡萝卜","qty":1.0,"unit":"根"},{"type":"I-食材","name":"肥牛片","qty":1.0,"unit":"盒"},{"type":"S-调料","name":"豆瓣酱","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"花椒","qty":3.0,"unit":"克"},{"type":"S-调料","name":"干辣椒","qty":5.0,"unit":"克"},{"type":"S-调料","name":"辣椒油","qty":2.0,"unit":"勺"}],"scene":"标准午餐","tag":"🥩 荤菜"},{"id":"D067","name":"蚂蚁上树","cat":"牛肉类","price":25.0,"time":20.0,"diff":"中等","kcal":219.0,"protein":8.5,"fat":4.0,"carb":20.0,"cost":33.0,"profit":23.35,"desc":"粉丝吸满肉香，滑嫩可口","ingredients":[{"type":"I-食材","name":"瘦肉","qty":0.5,"unit":"斤"},{"type":"I-食材","name":"粉丝","qty":1.0,"unit":"把"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"豆瓣酱","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"糖/白砂糖","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"姜","qty":3.0,"unit":"克"}],"scene":"标准午餐","tag":"🥩 荤菜 🔥 低卡"},{"id":"D068","name":"毛血旺","cat":"牛肉类","price":32.0,"time":30.0,"diff":"中等","kcal":287.5,"protein":20.0,"fat":6.5,"carb":6.0,"cost":31.0,"profit":29.4,"desc":"麻辣鲜香，内容丰富","ingredients":[{"type":"I-食材","name":"血豆腐","qty":1.0,"unit":"块"},{"type":"I-食材","name":"火锅丸子","qty":1.0,"unit":"袋"},{"type":"I-食材","name":"毛肚","qty":0.5,"unit":"斤"},{"type":"S-调料","name":"豆瓣酱","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"干辣椒","qty":5.0,"unit":"克"},{"type":"S-调料","name":"辣椒油","qty":2.0,"unit":"勺"}],"scene":"标准午餐","tag":"🥩 荤菜 🔥 低卡"},{"id":"D069","name":"干锅牛蛙","cat":"牛肉类","price":35.0,"time":30.0,"diff":"中等","kcal":495.0,"protein":16.0,"fat":8.0,"carb":8.0,"cost":28.0,"profit":32.5,"desc":"香辣过瘾，肉质细嫩","ingredients":[{"type":"I-食材","name":"猪里脊","qty":1.0,"unit":"斤"},{"type":"I-食材","name":"青椒","qty":2.0,"unit":"个"},{"type":"S-调料","name":"食用油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"豆瓣酱","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"干辣椒","qty":5.0,"unit":"克"}],"scene":"丰盛正餐","tag":"🥩 荤菜"},{"id":"D070","name":"牛百叶拌凉菜","cat":"牛肉类","price":28.0,"time":15.0,"diff":"简单","kcal":90.0,"protein":11.2,"fat":1.6,"carb":0,"cost":24.0,"profit":26.4,"desc":"脆嫩爽口，凉菜佳品","ingredients":[{"type":"I-食材","name":"牛百叶","qty":0.8,"unit":"斤"},{"type":"S-调料","name":"生抽/酱油","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"蒜","qty":3.0,"unit":"瓣"}],"scene":"低卡轻食","tag":"🥩 荤菜 🔥 低卡 ⚡ 快手"},{"id":"D071","name":"凉拌牛肉","cat":"牛肉类","price":35.0,"time":30.0,"diff":"简单","kcal":173.0,"protein":19.0,"fat":6.0,"carb":0,"cost":42.0,"profit":32.55,"desc":"蒜香浓郁，肉质鲜嫩","ingredients":[{"type":"I-食材","name":"牛腱子","qty":1.0,"unit":"斤"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"姜","qty":5.0,"unit":"克"},{"type":"S-调料","name":"蒜","qty":4.0,"unit":"瓣"}],"scene":"低卡轻食","tag":"🥩 荤菜 🔥 低卡 ⚡ 快手"},{"id":"D072","name":"卤牛肉","cat":"牛肉类","price":45.0,"time":120.0,"diff":"中等","kcal":349.0,"protein":38.0,"fat":12.0,"carb":0,"cost":84.0,"profit":41.7,"desc":"五香入味，下酒必备","ingredients":[{"type":"I-食材","name":"牛腱子","qty":2.0,"unit":"斤"},{"type":"S-调料","name":"生抽/酱油","qty":5.0,"unit":"勺"},{"type":"S-调料","name":"老抽","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"八角","qty":3.0,"unit":"个"},{"type":"S-调料","name":"桂皮","qty":2.0,"unit":"片"},{"type":"S-调料","name":"姜","qty":10.0,"unit":"克"}],"scene":"标准午餐","tag":"🥩 荤菜"},{"id":"D073","name":"肥牛金针菇","cat":"牛肉类","price":30.0,"time":20.0,"diff":"简单","kcal":326.0,"protein":17.0,"fat":15.0,"carb":3.0,"cost":31.0,"profit":29.1,"desc":"肥牛嫩滑，金针菇爽脆","ingredients":[{"type":"I-食材","name":"金针菇","qty":1.0,"unit":"袋"},{"type":"I-食材","name":"肥牛片","qty":1.0,"unit":"盒"},{"type":"S-调料","name":"食用油","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"}],"scene":"标准午餐","tag":"🥩 荤菜 ⚡ 快手"},{"id":"D074","name":"番茄牛腩","cat":"牛肉类","price":40.0,"time":90.0,"diff":"中等","kcal":337.0,"protein":20.0,"fat":20.0,"carb":12.0,"cost":55.2,"profit":38.95,"desc":"酸甜可口，老少皆宜","ingredients":[{"type":"I-食材","name":"牛腩","qty":1.0,"unit":"斤"},{"type":"I-食材","name":"番茄","qty":4.0,"unit":"个"},{"type":"S-调料","name":"生抽/酱油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"姜","qty":3.0,"unit":"克"}],"scene":"标准午餐","tag":"🥩 荤菜"},{"id":"D075","name":"酸汤肥牛","cat":"牛肉类","price":35.0,"time":25.0,"diff":"中等","kcal":285.0,"protein":18.0,"fat":15.0,"carb":12.0,"cost":40.0,"profit":33.8,"desc":"酸辣开胃，肥牛嫩滑","ingredients":[{"type":"I-食材","name":"青椒","qty":3.0,"unit":"个"},{"type":"I-食材","name":"肥牛片","qty":1.0,"unit":"盒"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"醋/陈醋","qty":3.0,"unit":"勺"}],"scene":"标准午餐","tag":"🥩 荤菜 🔥 低卡"},{"id":"D076","name":"红烧羊肉","cat":"羊肉类","price":42.0,"time":60.0,"diff":"中等","kcal":492.0,"protein":24.0,"fat":30.0,"carb":0,"cost":60.0,"profit":39.05,"desc":"软糯入味，冬季滋补","ingredients":[{"type":"I-食材","name":"羊排","qty":1.5,"unit":"斤"},{"type":"S-调料","name":"生抽/酱油","qty":4.0,"unit":"勺"},{"type":"S-调料","name":"老抽","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"冰糖","qty":3.0,"unit":"块"},{"type":"S-调料","name":"姜","qty":5.0,"unit":"克"}],"scene":"丰盛正餐","tag":"🥩 荤菜"},{"id":"D077","name":"孜然羊肉","cat":"羊肉类","price":36.0,"time":20.0,"diff":"中等","kcal":526.0,"protein":17.0,"fat":14.0,"carb":0,"cost":38.0,"profit":32.9,"desc":"孜然飘香，下酒神器","ingredients":[{"type":"I-食材","name":"羊肉片","qty":1.0,"unit":"斤"},{"type":"S-调料","name":"食用油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"干辣椒","qty":3.0,"unit":"克"},{"type":"S-调料","name":"孜然","qty":5.0,"unit":"克"}],"scene":"丰盛正餐","tag":"🥩 荤菜"},{"id":"D078","name":"葱爆羊肉","cat":"羊肉类","price":38.0,"time":15.0,"diff":"简单","kcal":566.0,"protein":21.0,"fat":14.0,"carb":12.0,"cost":54.0,"profit":36.5,"desc":"鲜嫩多汁，葱香浓郁","ingredients":[{"type":"I-食材","name":"羊肉片","qty":1.0,"unit":"斤"},{"type":"I-食材","name":"黄瓜","qty":4.0,"unit":"根"},{"type":"S-调料","name":"食用油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"}],"scene":"丰盛正餐","tag":"🥩 荤菜 ⚡ 快手"},{"id":"D079","name":"手抓羊肉","cat":"羊肉类","price":45.0,"time":60.0,"diff":"中等","kcal":519.0,"protein":32.0,"fat":40.0,"carb":0,"cost":80.0,"profit":44.2,"desc":"草原风味，原汁原味","ingredients":[{"type":"I-食材","name":"羊排","qty":2.0,"unit":"斤"},{"type":"S-调料","name":"八角","qty":3.0,"unit":"个"},{"type":"S-调料","name":"姜","qty":10.0,"unit":"克"}],"scene":"丰盛正餐","tag":"🥩 荤菜"},{"id":"D080","name":"羊肉炖萝卜","cat":"羊肉类","price":38.0,"time":70.0,"diff":"中等","kcal":221.0,"protein":19.0,"fat":12.0,"carb":4.0,"cost":47.5,"profit":37.15,"desc":"冬日暖身，滋补养生","ingredients":[{"type":"I-食材","name":"羊腿肉","qty":1.0,"unit":"斤"},{"type":"I-食材","name":"白萝卜","qty":1.0,"unit":"斤"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"姜","qty":5.0,"unit":"克"}],"scene":"标准午餐","tag":"🥩 荤菜 🔥 低卡"},{"id":"D081","name":"烤羊排","cat":"羊肉类","price":48.0,"time":60.0,"diff":"中等","kcal":439.0,"protein":24.0,"fat":30.0,"carb":0,"cost":60.0,"profit":45.5,"desc":"外焦里嫩，香气四溢","ingredients":[{"type":"I-食材","name":"羊排","qty":1.5,"unit":"斤"},{"type":"S-调料","name":"生抽/酱油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"干辣椒","qty":3.0,"unit":"克"},{"type":"S-调料","name":"孜然","qty":5.0,"unit":"克"}],"scene":"丰盛正餐","tag":"🥩 荤菜"},{"id":"D082","name":"羊肉串","cat":"羊肉类","price":4.0,"time":15.0,"diff":"简单","kcal":215.0,"protein":8.5,"fat":7.0,"carb":0,"cost":19.0,"profit":2.7,"desc":"夜市经典，孜然飘香","ingredients":[{"type":"I-食材","name":"羊肉片","qty":0.5,"unit":"斤"},{"type":"S-调料","name":"食用油","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"干辣椒","qty":2.0,"unit":"克"},{"type":"S-调料","name":"孜然","qty":3.0,"unit":"克"}],"scene":"标准午餐","tag":"🥩 荤菜 🔥 低卡 ⚡ 快手"},{"id":"D083","name":"羊蝎子","cat":"羊肉类","price":38.0,"time":90.0,"diff":"中等","kcal":414.0,"protein":36.0,"fat":24.0,"carb":0,"cost":84.0,"profit":35.85,"desc":"骨边肉香，啃食乐趣","ingredients":[{"type":"I-食材","name":"羊腿肉","qty":2.0,"unit":"斤"},{"type":"S-调料","name":"生抽/酱油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"干辣椒","qty":5.0,"unit":"克"},{"type":"S-调料","name":"姜","qty":5.0,"unit":"克"}],"scene":"丰盛正餐","tag":"🥩 荤菜"},{"id":"D084","name":"羊肉火锅","cat":"羊肉类","price":50.0,"time":30.0,"diff":"中等","kcal":345.0,"protein":25.5,"fat":21.0,"carb":0,"cost":57.0,"profit":47.6,"desc":"冬季首选，暖身滋补","ingredients":[{"type":"I-食材","name":"羊肉片","qty":1.5,"unit":"斤"},{"type":"S-调料","name":"生抽/酱油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"醋/陈醋","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"蒜","qty":3.0,"unit":"瓣"}],"scene":"标准午餐","tag":"🥩 荤菜"},{"id":"D085","name":"红烧鱼","cat":"鱼虾类","price":28.0,"time":30.0,"diff":"中等","kcal":261.0,"protein":24.0,"fat":4.5,"carb":0,"cost":15.0,"profit":24.75,"desc":"鲜香入味，年年有余","ingredients":[{"type":"I-食材","name":"草鱼","qty":1.5,"unit":"斤"},{"type":"S-调料","name":"生抽/酱油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"老抽","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"冰糖","qty":3.0,"unit":"块"},{"type":"S-调料","name":"姜","qty":5.0,"unit":"克"},{"type":"S-调料","name":"蒜","qty":3.0,"unit":"瓣"}],"scene":"标准午餐","tag":"🔥 低卡"},{"id":"D086","name":"糖醋鱼","cat":"鱼虾类","price":30.0,"time":35.0,"diff":"中等","kcal":606.0,"protein":24.0,"fat":4.5,"carb":0,"cost":15.0,"profit":27.1,"desc":"酸甜开胃，外酥里嫩","ingredients":[{"type":"I-食材","name":"草鱼","qty":1.5,"unit":"斤"},{"type":"S-调料","name":"食用油","qty":4.0,"unit":"勺"},{"type":"S-调料","name":"糖/白砂糖","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"淀粉","qty":2.0,"unit":"勺"}],"scene":"大份硬菜","tag":""},{"id":"D087","name":"清蒸鲈鱼","cat":"鱼虾类","price":35.0,"time":20.0,"diff":"简单","kcal":131.0,"protein":16.0,"fat":3.0,"carb":0,"cost":10.0,"profit":33.35,"desc":"原汁原味，清淡鲜美","ingredients":[{"type":"I-食材","name":"草鱼","qty":1.0,"unit":"斤"},{"type":"S-调料","name":"蒸鱼豉油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"姜","qty":5.0,"unit":"克"},{"type":"S-调料","name":"葱","qty":2.0,"unit":"根"}],"scene":"低卡轻食","tag":"🔥 低卡 ⚡ 快手"},{"id":"D088","name":"清蒸武昌鱼","cat":"鱼虾类","price":32.0,"time":20.0,"diff":"简单","kcal":151.0,"protein":19.2,"fat":4.8,"carb":0,"cost":14.4,"profit":30.35,"desc":"湖北名菜，鲜嫩可口","ingredients":[{"type":"I-食材","name":"武昌鱼","qty":1.2,"unit":"斤"},{"type":"S-调料","name":"蒸鱼豉油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"姜","qty":5.0,"unit":"克"},{"type":"S-调料","name":"葱","qty":2.0,"unit":"根"}],"scene":"低卡轻食","tag":"🔥 低卡 ⚡ 快手"},{"id":"D089","name":"酸菜鱼","cat":"鱼虾类","price":35.0,"time":30.0,"diff":"中等","kcal":226.0,"protein":24.0,"fat":4.5,"carb":0,"cost":15.0,"profit":31.5,"desc":"酸辣开胃，鱼片嫩滑","ingredients":[{"type":"I-食材","name":"草鱼","qty":1.5,"unit":"斤"},{"type":"S-调料","name":"豆瓣酱","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"干辣椒","qty":5.0,"unit":"克"},{"type":"S-调料","name":"泡椒","qty":5.0,"unit":"个"}],"scene":"标准午餐","tag":"🔥 低卡"},{"id":"D090","name":"水煮鱼","cat":"鱼虾类","price":38.0,"time":30.0,"diff":"中等","kcal":382.5,"protein":24.5,"fat":4.5,"carb":1.5,"cost":17.25,"profit":32.9,"desc":"麻辣鲜香，油而不腻","ingredients":[{"type":"I-食材","name":"草鱼","qty":1.5,"unit":"斤"},{"type":"I-食材","name":"大白菜","qty":0.5,"unit":"斤"},{"type":"S-调料","name":"豆瓣酱","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"花椒","qty":5.0,"unit":"克"},{"type":"S-调料","name":"干辣椒","qty":10.0,"unit":"克"},{"type":"S-调料","name":"辣椒油","qty":3.0,"unit":"勺"}],"scene":"标准午餐","tag":""},{"id":"D091","name":"剁椒鱼头","cat":"鱼虾类","price":40.0,"time":30.0,"diff":"中等","kcal":252.0,"protein":32.0,"fat":6.0,"carb":0,"cost":20.0,"profit":37.45,"desc":"湘菜经典，辣而不燥","ingredients":[{"type":"I-食材","name":"草鱼","qty":2.0,"unit":"斤"},{"type":"S-调料","name":"生抽/酱油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"剁椒","qty":5.0,"unit":"勺"},{"type":"S-调料","name":"姜","qty":3.0,"unit":"克"}],"scene":"标准午餐","tag":"🔥 低卡"},{"id":"D092","name":"红烧带鱼","cat":"鱼虾类","price":30.0,"time":25.0,"diff":"简单","kcal":272.0,"protein":27.0,"fat":9.0,"carb":0,"cost":22.5,"profit":28.05,"desc":"酥香入味，下饭神器","ingredients":[{"type":"I-食材","name":"带鱼","qty":1.5,"unit":"斤"},{"type":"S-调料","name":"生抽/酱油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"老抽","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"冰糖","qty":2.0,"unit":"块"},{"type":"S-调料","name":"姜","qty":3.0,"unit":"克"}],"scene":"标准午餐","tag":"🔥 低卡 ⚡ 快手"},{"id":"D093","name":"干炸带鱼","cat":"鱼虾类","price":28.0,"time":20.0,"diff":"简单","kcal":600.0,"protein":27.0,"fat":9.0,"carb":0,"cost":22.5,"profit":26.48,"desc":"外酥里嫩，香脆可口","ingredients":[{"type":"I-食材","name":"带鱼","qty":1.5,"unit":"斤"},{"type":"S-调料","name":"食用油","qty":4.0,"unit":"勺"},{"type":"S-调料","name":"盐","qty":2.0,"unit":"克"},{"type":"S-调料","name":"面粉（挂糊）","qty":3.0,"unit":"勺"}],"scene":"丰盛正餐","tag":"⚡ 快手"},{"id":"D094","name":"干烧黄花鱼","cat":"鱼虾类","price":32.0,"time":25.0,"diff":"中等","kcal":155.0,"protein":20.4,"fat":2.4,"carb":0,"cost":21.6,"profit":30.65,"desc":"干香微辣，鲜美可口","ingredients":[{"type":"I-食材","name":"黄花鱼","qty":1.2,"unit":"斤"},{"type":"S-调料","name":"生抽/酱油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"糖/白砂糖","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"姜","qty":3.0,"unit":"克"}],"scene":"低卡轻食","tag":"🔥 低卡"},{"id":"D095","name":"酱焖黄颡鱼/黄骨鱼","cat":"鱼虾类","price":28.0,"time":25.0,"diff":"中等","kcal":174.0,"protein":27.0,"fat":1.5,"carb":0,"cost":37.5,"profit":26.55,"desc":"酱香浓郁，细嫩无刺","ingredients":[{"type":"I-食材","name":"鳝鱼","qty":1.5,"unit":"斤"},{"type":"S-调料","name":"生抽/酱油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"老抽","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"姜","qty":5.0,"unit":"克"}],"scene":"低卡轻食","tag":"🔥 低卡"},{"id":"D096","name":"红烧鳝鱼","cat":"鱼虾类","price":35.0,"time":30.0,"diff":"中等","kcal":212.0,"protein":27.0,"fat":1.5,"carb":0,"cost":37.5,"profit":33.05,"desc":"鳝鱼肥美，补血强身","ingredients":[{"type":"I-食材","name":"鳝鱼","qty":1.5,"unit":"斤"},{"type":"S-调料","name":"生抽/酱油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"老抽","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"冰糖","qty":2.0,"unit":"块"},{"type":"S-调料","name":"姜","qty":3.0,"unit":"克"}],"scene":"标准午餐","tag":"🔥 低卡"},{"id":"D097","name":"响油鳝丝","cat":"鱼虾类","price":36.0,"time":20.0,"diff":"中等","kcal":121.0,"protein":18.0,"fat":1.0,"carb":0,"cost":25.0,"profit":34.75,"desc":"沪上名菜，鳝丝鲜嫩","ingredients":[{"type":"I-食材","name":"鳝鱼","qty":1.0,"unit":"斤"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"花椒","qty":2.0,"unit":"克"},{"type":"S-调料","name":"姜","qty":5.0,"unit":"克"}],"scene":"低卡轻食","tag":"🔥 低卡"},{"id":"D098","name":"爆炒鳝片","cat":"鱼虾类","price":34.0,"time":20.0,"diff":"中等","kcal":161.0,"protein":19.0,"fat":1.0,"carb":9.0,"cost":36.0,"profit":32.8,"desc":"清脆爽口，鳝片鲜嫩","ingredients":[{"type":"I-食材","name":"鳝鱼","qty":1.0,"unit":"斤"},{"type":"I-食材","name":"洋葱","qty":1.0,"unit":"个"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"干辣椒","qty":3.0,"unit":"克"}],"scene":"低卡轻食","tag":"🔥 低卡"},{"id":"D099","name":"油焖大虾","cat":"鱼虾类","price":38.0,"time":20.0,"diff":"中等","kcal":152.0,"protein":18.0,"fat":1.0,"carb":0,"cost":35.0,"profit":36.35,"desc":"鲁菜经典，虾鲜壳脆","ingredients":[{"type":"I-食材","name":"基围虾","qty":1.0,"unit":"斤"},{"type":"S-调料","name":"生抽/酱油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"冰糖","qty":2.0,"unit":"块"},{"type":"S-调料","name":"姜","qty":3.0,"unit":"克"}],"scene":"低卡轻食","tag":"🔥 低卡"},{"id":"D100","name":"白灼虾","cat":"鱼虾类","price":35.0,"time":10.0,"diff":"简单","kcal":96.0,"protein":18.0,"fat":1.0,"carb":0,"cost":35.0,"profit":34.35,"desc":"原汁原味，蘸料鲜美","ingredients":[{"type":"I-食材","name":"基围虾","qty":1.0,"unit":"斤"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"姜","qty":5.0,"unit":"克"}],"scene":"低卡轻食","tag":"🔥 低卡 ⚡ 快手"},{"id":"D101","name":"蒜蓉粉丝蒸扇贝","cat":"鱼虾类","price":6.0,"time":15.0,"diff":"简单","kcal":192.5,"protein":9.0,"fat":0.5,"carb":10.0,"cost":29.0,"profit":4.5,"desc":"按个计价，蒜香浓郁","ingredients":[{"type":"I-食材","name":"基围虾","qty":0.5,"unit":"斤"},{"type":"I-食材","name":"粉丝","qty":0.5,"unit":"把"},{"type":"S-调料","name":"食用油","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"蒜","qty":3.0,"unit":"瓣"}],"scene":"低卡轻食","tag":"🔥 低卡 ⚡ 快手"},{"id":"D102","name":"香辣蟹","cat":"鱼虾类","price":40.0,"time":30.0,"diff":"中等","kcal":625.0,"protein":60.0,"fat":12.0,"carb":0,"cost":48.0,"profit":37.5,"desc":"香辣过瘾，蟹肉肥美","ingredients":[{"type":"I-食材","name":"螃蟹","qty":6.0,"unit":"只"},{"type":"S-调料","name":"食用油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"豆瓣酱","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"干辣椒","qty":5.0,"unit":"克"}],"scene":"大份硬菜","tag":""},{"id":"D103","name":"避风塘虾","cat":"鱼虾类","price":35.0,"time":25.0,"diff":"中等","kcal":427.0,"protein":18.0,"fat":1.0,"carb":0,"cost":35.0,"profit":32.6,"desc":"蒜香酥脆，中西结合","ingredients":[{"type":"I-食材","name":"基围虾","qty":1.0,"unit":"斤"},{"type":"S-调料","name":"食用油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"蒜","qty":3.0,"unit":"瓣"},{"type":"S-调料","name":"面包糠","qty":3.0,"unit":"勺"}],"scene":"丰盛正餐","tag":""},{"id":"D104","name":"蛤蜊蒸蛋","cat":"鱼虾类","price":22.0,"time":20.0,"diff":"简单","kcal":175.0,"protein":18.0,"fat":10.5,"carb":2.7,"cost":7.3,"profit":21.99,"desc":"双鲜合一，嫩滑可口","ingredients":[{"type":"I-食材","name":"鸡蛋","qty":2.0,"unit":"个"},{"type":"I-食材","name":"蛤蜊","qty":0.5,"unit":"斤"},{"type":"S-调料","name":"盐","qty":1.0,"unit":"克"}],"scene":"低卡轻食","tag":"🔥 低卡 ⚡ 快手"},{"id":"D105","name":"紫菜蛋花汤","cat":"汤类","price":10.0,"time":10.0,"diff":"简单","kcal":84.0,"protein":7.5,"fat":5.0,"carb":1.6,"cost":3.9,"profit":9.84,"desc":"简单快手，补碘佳品","ingredients":[{"type":"I-食材","name":"鸡蛋","qty":1.0,"unit":"个"},{"type":"I-食材","name":"紫菜","qty":0.5,"unit":"两"},{"type":"S-调料","name":"盐","qty":1.0,"unit":"克"},{"type":"S-调料","name":"生抽/酱油","qty":0.5,"unit":"勺"}],"scene":"低卡轻食","tag":"🍲 汤品 🔥 低卡 ⚡ 快手"},{"id":"D106","name":"麻婆豆腐","cat":"豆腐类","price":18.0,"time":20.0,"diff":"中等","kcal":247.0,"protein":13.1,"fat":7.4,"carb":3.0,"cost":11.5,"profit":16.3,"desc":"川味经典，麻辣鲜香","ingredients":[{"type":"I-食材","name":"瘦肉","qty":0.3,"unit":"斤"},{"type":"I-食材","name":"北豆腐","qty":1.0,"unit":"块"},{"type":"S-调料","name":"豆瓣酱","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"花椒","qty":2.0,"unit":"克"},{"type":"S-调料","name":"辣椒油","qty":2.0,"unit":"勺"}],"scene":"标准午餐","tag":"🥬 素菜 🔥 低卡"},{"id":"D107","name":"家常豆腐","cat":"豆腐类","price":18.0,"time":20.0,"diff":"中等","kcal":371.0,"protein":15.0,"fat":10.0,"carb":3.6,"cost":6.9,"profit":16.8,"desc":"煎香入味，豆香浓郁","ingredients":[{"type":"I-食材","name":"鸡蛋","qty":1.0,"unit":"个"},{"type":"I-食材","name":"北豆腐","qty":1.0,"unit":"块"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"}],"scene":"标准午餐","tag":"🥬 素菜"},{"id":"D108","name":"鲫鱼炖豆腐","cat":"豆腐类","price":28.0,"time":35.0,"diff":"中等","kcal":159.0,"protein":22.0,"fat":4.0,"carb":2.0,"cost":13.0,"profit":27.25,"desc":"汤白如奶，营养丰富","ingredients":[{"type":"I-食材","name":"鲫鱼","qty":1.0,"unit":"斤"},{"type":"I-食材","name":"南豆腐","qty":1.0,"unit":"块"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"姜","qty":3.0,"unit":"克"}],"scene":"低卡轻食","tag":"🥬 素菜 🔥 低卡"},{"id":"D109","name":"小葱拌豆腐","cat":"豆腐类","price":12.0,"time":5.0,"diff":"简单","kcal":154.0,"protein":5.0,"fat":2.0,"carb":2.0,"cost":5.0,"profit":10.6,"desc":"清淡爽口，夏季必备","ingredients":[{"type":"I-食材","name":"南豆腐","qty":1.0,"unit":"块"},{"type":"S-调料","name":"芝麻油/香油","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"葱","qty":2.0,"unit":"根"}],"scene":"低卡轻食","tag":"🥬 素菜 🔥 低卡 ⚡ 快手"},{"id":"D110","name":"皮蛋豆腐","cat":"豆腐类","price":16.0,"time":10.0,"diff":"简单","kcal":254.0,"protein":24.0,"fat":15.0,"carb":5.0,"cost":11.5,"profit":15.0,"desc":"凉菜经典，嫩滑爽口","ingredients":[{"type":"I-食材","name":"北豆腐","qty":1.0,"unit":"块"},{"type":"I-食材","name":"皮蛋","qty":2.0,"unit":"个"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"蒜","qty":2.0,"unit":"瓣"}],"scene":"标准午餐","tag":"🥬 素菜 🔥 低卡 ⚡ 快手"},{"id":"D111","name":"蟹黄豆腐","cat":"豆腐类","price":28.0,"time":20.0,"diff":"中等","kcal":208.0,"protein":19.0,"fat":12.0,"carb":3.2,"cost":7.8,"profit":27.7,"desc":"蟹香浓郁，嫩滑可口","ingredients":[{"type":"I-食材","name":"鸡蛋","qty":2.0,"unit":"个"},{"type":"I-食材","name":"南豆腐","qty":1.0,"unit":"块"},{"type":"S-调料","name":"生抽/酱油","qty":1.0,"unit":"勺"}],"scene":"标准午餐","tag":"🥬 素菜 🔥 低卡"},{"id":"D112","name":"锅塌豆腐","cat":"豆腐类","price":20.0,"time":25.0,"diff":"中等","kcal":221.0,"protein":15.0,"fat":10.0,"carb":3.6,"cost":6.9,"profit":19.2,"desc":"外香里嫩，鲁菜经典","ingredients":[{"type":"I-食材","name":"鸡蛋","qty":1.0,"unit":"个"},{"type":"I-食材","name":"北豆腐","qty":1.0,"unit":"块"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"面粉（挂糊）","qty":2.0,"unit":"勺"}],"scene":"标准午餐","tag":"🥬 素菜 🔥 低卡"},{"id":"D113","name":"清炒时蔬","cat":"蔬菜类","price":12.0,"time":8.0,"diff":"简单","kcal":187.5,"protein":0.5,"fat":0,"carb":1.5,"cost":2.25,"profit":11.38,"desc":"清淡爽口，当季新鲜","ingredients":[{"type":"I-食材","name":"大白菜","qty":0.5,"unit":"斤"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"盐","qty":2.0,"unit":"克"}],"scene":"低卡轻食","tag":"🥬 素菜 🔥 低卡 ⚡ 快手"},{"id":"D114","name":"蒜蓉西兰花","cat":"蔬菜类","price":14.0,"time":10.0,"diff":"简单","kcal":222.0,"protein":3.0,"fat":0,"carb":4.0,"cost":9.0,"profit":12.48,"desc":"翠绿爽口，蒜香浓郁","ingredients":[{"type":"I-食材","name":"西蓝花","qty":1.0,"unit":"颗"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"盐","qty":2.0,"unit":"克"},{"type":"S-调料","name":"蒜","qty":3.0,"unit":"瓣"}],"scene":"标准午餐","tag":"🥬 素菜 🔥 低卡 ⚡ 快手"},{"id":"D115","name":"干煸四季豆","cat":"蔬菜类","price":14.0,"time":15.0,"diff":"简单","kcal":373.0,"protein":7.1,"fat":2.4,"carb":5.0,"cost":15.0,"profit":11.9,"desc":"干香微辣，下饭神器","ingredients":[{"type":"I-食材","name":"瘦肉","qty":0.3,"unit":"斤"},{"type":"I-食材","name":"豆角","qty":1.0,"unit":"斤"},{"type":"S-调料","name":"食用油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"干辣椒","qty":3.0,"unit":"克"}],"scene":"标准午餐","tag":"🥬 素菜 ⚡ 快手"},{"id":"D116","name":"地三鲜","cat":"蔬菜类","price":18.0,"time":25.0,"diff":"中等","kcal":529.0,"protein":8.0,"fat":0,"carb":46.0,"cost":55.0,"profit":16.0,"desc":"东北名菜，酱香浓郁","ingredients":[{"type":"I-食材","name":"土豆","qty":2.0,"unit":"个"},{"type":"I-食材","name":"茄子","qty":2.0,"unit":"根"},{"type":"I-食材","name":"青椒","qty":2.0,"unit":"个"},{"type":"S-调料","name":"食用油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"淀粉","qty":1.0,"unit":"勺"}],"scene":"丰盛正餐","tag":"🥬 素菜"},{"id":"D117","name":"虎皮青椒","cat":"蔬菜类","price":14.0,"time":15.0,"diff":"简单","kcal":139.0,"protein":4.0,"fat":0,"carb":16.0,"cost":20.0,"profit":12.6,"desc":"青椒软糯，微酸开胃","ingredients":[{"type":"I-食材","name":"青椒","qty":4.0,"unit":"个"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"糖/白砂糖","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"醋/陈醋","qty":1.0,"unit":"勺"}],"scene":"低卡轻食","tag":"🥬 素菜 🔥 低卡 ⚡ 快手"},{"id":"D118","name":"干锅花菜","cat":"蔬菜类","price":18.0,"time":20.0,"diff":"中等","kcal":382.0,"protein":7.1,"fat":2.4,"carb":4.0,"cost":14.0,"profit":15.9,"desc":"香辣入味，花菜脆爽","ingredients":[{"type":"I-食材","name":"瘦肉","qty":0.3,"unit":"斤"},{"type":"I-食材","name":"菜花","qty":1.0,"unit":"颗"},{"type":"S-调料","name":"食用油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"豆瓣酱","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"干辣椒","qty":3.0,"unit":"克"}],"scene":"标准午餐","tag":"🥬 素菜"},{"id":"D119","name":"干锅土豆片","cat":"蔬菜类","price":16.0,"time":20.0,"diff":"中等","kcal":567.0,"protein":11.1,"fat":2.4,"carb":45.0,"cost":55.5,"profit":13.9,"desc":"香辣过瘾，土豆软糯","ingredients":[{"type":"I-食材","name":"瘦肉","qty":0.3,"unit":"斤"},{"type":"I-食材","name":"土豆","qty":3.0,"unit":"个"},{"type":"S-调料","name":"食用油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"豆瓣酱","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"干辣椒","qty":3.0,"unit":"克"}],"scene":"丰盛正餐","tag":"🥬 素菜"},{"id":"D120","name":"手撕包菜","cat":"蔬菜类","price":12.0,"time":10.0,"diff":"简单","kcal":206.5,"protein":0.5,"fat":0,"carb":1.5,"cost":2.25,"profit":10.6,"desc":"酸辣爽口，开胃下饭","ingredients":[{"type":"I-食材","name":"大白菜","qty":0.5,"unit":"斤"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"醋/陈醋","qty":1.0,"unit":"勺"}],"scene":"标准午餐","tag":"🥬 素菜 🔥 低卡 ⚡ 快手"},{"id":"D121","name":"酸辣土豆丝","cat":"蔬菜类","price":12.0,"time":10.0,"diff":"简单","kcal":341.0,"protein":4.0,"fat":0,"carb":30.0,"cost":33.0,"profit":10.4,"desc":"酸辣脆爽，家常必备","ingredients":[{"type":"I-食材","name":"土豆","qty":2.0,"unit":"个"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"干辣椒","qty":3.0,"unit":"克"}],"scene":"标准午餐","tag":"🥬 素菜 ⚡ 快手"},{"id":"D122","name":"醋溜白菜","cat":"蔬菜类","price":10.0,"time":10.0,"diff":"简单","kcal":193.5,"protein":0.5,"fat":0,"carb":1.5,"cost":2.25,"profit":9.0,"desc":"酸爽开胃，简单快手","ingredients":[{"type":"I-食材","name":"大白菜","qty":0.5,"unit":"斤"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"}],"scene":"低卡轻食","tag":"🥬 素菜 🔥 低卡 ⚡ 快手"},{"id":"D123","name":"白菜炖豆腐","cat":"蔬菜类","price":16.0,"time":25.0,"diff":"简单","kcal":213.5,"protein":8.5,"fat":5.0,"carb":4.5,"cost":7.75,"profit":15.1,"desc":"冬季暖身汤，朴素美味","ingredients":[{"type":"I-食材","name":"北豆腐","qty":1.0,"unit":"块"},{"type":"I-食材","name":"大白菜","qty":0.5,"unit":"斤"},{"type":"S-调料","name":"食用油","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"}],"scene":"标准午餐","tag":"🥬 素菜 🔥 低卡 ⚡ 快手"},{"id":"D124","name":"菠菜炒鸡蛋","cat":"蔬菜类","price":14.0,"time":10.0,"diff":"简单","kcal":340.0,"protein":15.0,"fat":10.0,"carb":2.7,"cost":5.8,"profit":13.38,"desc":"补铁佳品，翠绿金黄","ingredients":[{"type":"I-食材","name":"鸡蛋","qty":2.0,"unit":"个"},{"type":"I-食材","name":"菠菜","qty":0.5,"unit":"斤"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"盐","qty":2.0,"unit":"克"}],"scene":"标准午餐","tag":"🥬 素菜 ⚡ 快手"},{"id":"D125","name":"香菇油菜","cat":"蔬菜类","price":16.0,"time":15.0,"diff":"简单","kcal":278.5,"protein":10.5,"fat":0,"carb":16.0,"cost":27.0,"profit":14.8,"desc":"清淡素雅，营养均衡","ingredients":[{"type":"I-食材","name":"油菜","qty":0.5,"unit":"斤"},{"type":"I-食材","name":"香菇","qty":5.0,"unit":"朵"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"}],"scene":"标准午餐","tag":"🥬 素菜 🔥 低卡 ⚡ 快手"},{"id":"D126","name":"芦笋炒虾仁","cat":"鱼虾类","price":35.0,"time":15.0,"diff":"简单","kcal":240.0,"protein":11.5,"fat":0.5,"carb":2.0,"cost":19.5,"profit":34.38,"desc":"高档食材，清淡鲜美","ingredients":[{"type":"I-食材","name":"虾仁","qty":0.5,"unit":"斤"},{"type":"I-食材","name":"西蓝花","qty":0.5,"unit":"颗"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"盐","qty":2.0,"unit":"克"}],"scene":"标准午餐","tag":"🔥 低卡 ⚡ 快手"},{"id":"D127","name":"荷塘小炒","cat":"蔬菜类","price":18.0,"time":12.0,"diff":"简单","kcal":262.5,"protein":5.5,"fat":0,"carb":16.0,"cost":25.5,"profit":17.4,"desc":"色彩缤纷，清爽健康","ingredients":[{"type":"I-食材","name":"胡萝卜","qty":1.0,"unit":"根"},{"type":"I-食材","name":"木耳","qty":0.5,"unit":"两"},{"type":"I-食材","name":"杏鲍菇","qty":2.0,"unit":"个"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"}],"scene":"标准午餐","tag":"🥬 素菜 🔥 低卡 ⚡ 快手"},{"id":"D128","name":"凉拌黄瓜","cat":"凉菜类","price":10.0,"time":5.0,"diff":"简单","kcal":152.0,"protein":2.0,"fat":0,"carb":6.0,"cost":8.0,"profit":8.2,"desc":"夏季必备，清脆爽口","ingredients":[{"type":"I-食材","name":"黄瓜","qty":2.0,"unit":"根"},{"type":"S-调料","name":"芝麻油/香油","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"蒜","qty":2.0,"unit":"瓣"}],"scene":"低卡轻食","tag":"🥬 素菜 🔥 低卡 ⚡ 快手"},{"id":"D129","name":"凉拌木耳","cat":"凉菜类","price":12.0,"time":10.0,"diff":"简单","kcal":37.0,"protein":1.0,"fat":0,"carb":4.0,"cost":8.0,"profit":10.7,"desc":"木耳脆爽，凉菜佳品","ingredients":[{"type":"I-食材","name":"木耳","qty":1.0,"unit":"两"},{"type":"S-调料","name":"生抽/酱油","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"蒜","qty":2.0,"unit":"瓣"}],"scene":"低卡轻食","tag":"🥬 素菜 🔥 低卡 ⚡ 快手"},{"id":"D130","name":"凉拌海带丝","cat":"凉菜类","price":10.0,"time":10.0,"diff":"简单","kcal":37.0,"protein":0.5,"fat":0,"carb":3.5,"cost":5.5,"profit":8.7,"desc":"海带爽滑，补碘佳品","ingredients":[{"type":"I-食材","name":"海带","qty":0.5,"unit":"斤"},{"type":"S-调料","name":"生抽/酱油","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"蒜","qty":2.0,"unit":"瓣"}],"scene":"低卡轻食","tag":"🥬 素菜 🔥 低卡 ⚡ 快手"},{"id":"D131","name":"凉拌金针菇","cat":"凉菜类","price":12.0,"time":10.0,"diff":"简单","kcal":42.0,"protein":2.0,"fat":0,"carb":3.0,"cost":6.0,"profit":10.7,"desc":"滑嫩爽口，凉菜首选","ingredients":[{"type":"I-食材","name":"金针菇","qty":1.0,"unit":"袋"},{"type":"S-调料","name":"生抽/酱油","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"蒜","qty":2.0,"unit":"瓣"}],"scene":"低卡轻食","tag":"🥬 素菜 🔥 低卡 ⚡ 快手"},{"id":"D132","name":"凉拌莴笋","cat":"凉菜类","price":12.0,"time":8.0,"diff":"简单","kcal":29.0,"protein":1.0,"fat":0,"carb":2.0,"cost":5.0,"profit":11.3,"desc":"清脆爽口，绿色健康","ingredients":[{"type":"I-食材","name":"莴笋","qty":1.0,"unit":"根"},{"type":"S-调料","name":"生抽/酱油","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"}],"scene":"低卡轻食","tag":"🥬 素菜 🔥 低卡 ⚡ 快手"},{"id":"D133","name":"凉拌皮蛋","cat":"凉菜类","price":14.0,"time":10.0,"diff":"简单","kcal":244.0,"protein":24.0,"fat":15.0,"carb":3.0,"cost":9.0,"profit":12.1,"desc":"蒜香浓郁，独特风味","ingredients":[{"type":"I-食材","name":"皮蛋","qty":3.0,"unit":"个"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"蒜","qty":3.0,"unit":"瓣"}],"scene":"标准午餐","tag":"🥬 素菜 🔥 低卡 ⚡ 快手"},{"id":"D134","name":"凉拌腐竹","cat":"凉菜类","price":12.0,"time":10.0,"diff":"简单","kcal":117.0,"protein":9.0,"fat":5.0,"carb":2.0,"cost":7.0,"profit":10.7,"desc":"豆香浓郁，口感丰富","ingredients":[{"type":"I-食材","name":"腐竹","qty":1.0,"unit":"两"},{"type":"S-调料","name":"生抽/酱油","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"蒜","qty":2.0,"unit":"瓣"}],"scene":"低卡轻食","tag":"🥬 素菜 🔥 低卡 ⚡ 快手"},{"id":"D135","name":"东北大拉皮","cat":"凉菜类","price":16.0,"time":15.0,"diff":"简单","kcal":146.0,"protein":1.0,"fat":0,"carb":6.0,"cost":12.0,"profit":14.9,"desc":"东北特色，爽滑Q弹","ingredients":[{"type":"I-食材","name":"黄瓜","qty":1.0,"unit":"根"},{"type":"I-食材","name":"魔芋丝","qty":1.0,"unit":"袋"},{"type":"S-调料","name":"芝麻油/香油","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"}],"scene":"低卡轻食","tag":"🥬 素菜 🔥 低卡 ⚡ 快手"},{"id":"D136","name":"番茄蛋汤","cat":"汤类","price":10.0,"time":10.0,"diff":"简单","kcal":270.0,"protein":16.0,"fat":10.0,"carb":7.2,"cost":10.4,"profit":9.69,"desc":"酸甜开胃，制作简便","ingredients":[{"type":"I-食材","name":"鸡蛋","qty":2.0,"unit":"个"},{"type":"I-食材","name":"番茄","qty":2.0,"unit":"个"},{"type":"S-调料","name":"食用油","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"盐","qty":1.0,"unit":"克"}],"scene":"标准午餐","tag":"🍲 汤品 🔥 低卡 ⚡ 快手"},{"id":"D137","name":"紫菜蛋汤","cat":"汤类","price":8.0,"time":10.0,"diff":"简单","kcal":80.0,"protein":7.5,"fat":5.0,"carb":1.6,"cost":3.9,"profit":8.0,"desc":"补碘佳品，紫菜鲜香","ingredients":[{"type":"I-食材","name":"鸡蛋","qty":1.0,"unit":"个"},{"type":"I-食材","name":"紫菜","qty":0.5,"unit":"两"}],"scene":"低卡轻食","tag":"🍲 汤品 🔥 低卡 ⚡ 快手"},{"id":"D138","name":"青菜豆腐汤","cat":"汤类","price":10.0,"time":15.0,"diff":"简单","kcal":62.5,"protein":5.3,"fat":2.0,"carb":2.9,"cost":6.35,"profit":9.7,"desc":"清淡养生，减肥首选","ingredients":[{"type":"I-食材","name":"南豆腐","qty":1.0,"unit":"块"},{"type":"I-食材","name":"大白菜","qty":0.3,"unit":"斤"},{"type":"S-调料","name":"生抽/酱油","qty":1.0,"unit":"勺"}],"scene":"低卡轻食","tag":"🍲 汤品 🔥 低卡 ⚡ 快手"},{"id":"D139","name":"玉米排骨汤","cat":"汤类","price":25.0,"time":60.0,"diff":"中等","kcal":405.0,"protein":20.0,"fat":18.0,"carb":38.0,"cost":67.0,"profit":24.75,"desc":"汤浓鲜美，玉米甜香","ingredients":[{"type":"I-食材","name":"猪排骨","qty":1.0,"unit":"斤"},{"type":"I-食材","name":"玉米","qty":2.0,"unit":"根"},{"type":"S-调料","name":"姜","qty":5.0,"unit":"克"}],"scene":"丰盛正餐","tag":"🍲 汤品"},{"id":"D140","name":"莲藕排骨汤","cat":"汤类","price":28.0,"time":90.0,"diff":"中等","kcal":275.0,"protein":16.0,"fat":16.0,"carb":16.0,"cost":45.0,"profit":27.75,"desc":"粉糯可口，湖北名汤","ingredients":[{"type":"I-食材","name":"猪排骨","qty":1.0,"unit":"斤"},{"type":"I-食材","name":"莲藕","qty":1.0,"unit":"节"},{"type":"S-调料","name":"姜","qty":5.0,"unit":"克"}],"scene":"标准午餐","tag":"🍲 汤品 🔥 低卡"},{"id":"D141","name":"冬瓜排骨汤","cat":"汤类","price":22.0,"time":60.0,"diff":"中等","kcal":208.0,"protein":14.0,"fat":16.0,"carb":1.0,"cost":27.0,"profit":21.85,"desc":"清淡利尿，夏日佳品","ingredients":[{"type":"I-食材","name":"猪排骨","qty":1.0,"unit":"斤"},{"type":"I-食材","name":"冬瓜","qty":0.5,"unit":"斤"},{"type":"S-调料","name":"姜","qty":3.0,"unit":"克"}],"scene":"标准午餐","tag":"🍲 汤品 🔥 低卡"},{"id":"D142","name":"萝卜丝鲫鱼汤","cat":"汤类","price":22.0,"time":30.0,"diff":"中等","kcal":103.0,"protein":17.5,"fat":2.0,"carb":2.0,"cost":10.75,"profit":21.85,"desc":"清淡鲜美，健脾开胃","ingredients":[{"type":"I-食材","name":"鲫鱼","qty":1.0,"unit":"斤"},{"type":"I-食材","name":"白萝卜","qty":0.5,"unit":"斤"},{"type":"S-调料","name":"姜","qty":3.0,"unit":"克"}],"scene":"低卡轻食","tag":"🍲 汤品 🔥 低卡"},{"id":"D143","name":"羊肉萝卜汤","cat":"汤类","price":30.0,"time":60.0,"diff":"中等","kcal":193.0,"protein":18.5,"fat":12.0,"carb":2.0,"cost":44.75,"profit":29.85,"desc":"冬日暖身，滋补养生","ingredients":[{"type":"I-食材","name":"羊腿肉","qty":1.0,"unit":"斤"},{"type":"I-食材","name":"白萝卜","qty":0.5,"unit":"斤"},{"type":"S-调料","name":"姜","qty":3.0,"unit":"克"}],"scene":"低卡轻食","tag":"🍲 汤品 🔥 低卡"},{"id":"D144","name":"乌鸡汤","cat":"汤类","price":28.0,"time":90.0,"diff":"中等","kcal":205.0,"protein":18.0,"fat":14.0,"carb":0,"cost":35.0,"profit":27.75,"desc":"滋补佳品，美容养颜","ingredients":[{"type":"I-食材","name":"整鸡","qty":1.0,"unit":"只"},{"type":"S-调料","name":"姜","qty":5.0,"unit":"克"}],"scene":"标准午餐","tag":"🍲 汤品 🔥 低卡"},{"id":"D145","name":"母鸡汤","cat":"汤类","price":25.0,"time":90.0,"diff":"中等","kcal":205.0,"protein":18.0,"fat":14.0,"carb":0,"cost":35.0,"profit":24.75,"desc":"大补元气，暖胃健脾","ingredients":[{"type":"I-食材","name":"整鸡","qty":1.0,"unit":"只"},{"type":"S-调料","name":"姜","qty":5.0,"unit":"克"}],"scene":"标准午餐","tag":"🍲 汤品 🔥 低卡"},{"id":"D146","name":"老鸭汤","cat":"汤类","price":30.0,"time":120.0,"diff":"中等","kcal":205.0,"protein":18.0,"fat":14.0,"carb":0,"cost":35.0,"profit":29.75,"desc":"鸭肉酥烂，汤清味醇","ingredients":[{"type":"I-食材","name":"整鸡","qty":1.0,"unit":"只"},{"type":"S-调料","name":"姜","qty":5.0,"unit":"克"}],"scene":"标准午餐","tag":"🍲 汤品 🔥 低卡"},{"id":"D147","name":"西红柿鸡蛋汤","cat":"汤类","price":10.0,"time":10.0,"diff":"简单","kcal":180.0,"protein":16.0,"fat":10.0,"carb":7.2,"cost":10.4,"profit":10.0,"desc":"酸甜开胃，家常必备","ingredients":[{"type":"I-食材","name":"鸡蛋","qty":2.0,"unit":"个"},{"type":"I-食材","name":"番茄","qty":2.0,"unit":"个"}],"scene":"低卡轻食","tag":"🍲 汤品 🔥 低卡 ⚡ 快手"},{"id":"D148","name":"扬州炒饭","cat":"主食类","price":18.0,"time":15.0,"diff":"简单","kcal":512.0,"protein":22.1,"fat":12.4,"carb":33.2,"cost":43.8,"profit":17.4,"desc":"粒粒分明，内容丰富","ingredients":[{"type":"I-食材","name":"鸡蛋","qty":2.0,"unit":"个"},{"type":"I-食材","name":"瘦肉","qty":0.3,"unit":"斤"},{"type":"I-食材","name":"青椒","qty":1.0,"unit":"个"},{"type":"I-食材","name":"米饭","qty":1.0,"unit":"碗"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"}],"scene":"丰盛正餐","tag":"🍚 主食 ⚡ 快手"},{"id":"D149","name":"酱油炒饭","cat":"主食类","price":12.0,"time":10.0,"diff":"简单","kcal":391.0,"protein":9.0,"fat":5.0,"carb":28.6,"cost":31.4,"profit":10.8,"desc":"焦香可口，童年味道","ingredients":[{"type":"I-食材","name":"鸡蛋","qty":1.0,"unit":"个"},{"type":"I-食材","name":"米饭","qty":1.0,"unit":"碗"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"}],"scene":"标准午餐","tag":"🍚 主食 ⚡ 快手"},{"id":"D150","name":"蛋炒饭","cat":"主食类","price":12.0,"time":10.0,"diff":"简单","kcal":270.0,"protein":16.0,"fat":10.0,"carb":29.2,"cost":32.8,"profit":12.0,"desc":"简单快手，剩饭重生","ingredients":[{"type":"I-食材","name":"鸡蛋","qty":2.0,"unit":"个"},{"type":"I-食材","name":"米饭","qty":1.0,"unit":"碗"}],"scene":"标准午餐","tag":"🍚 主食 🔥 低卡 ⚡ 快手"},{"id":"D151","name":"葱油拌面","cat":"主食类","price":14.0,"time":15.0,"diff":"简单","kcal":401.0,"protein":3.0,"fat":0,"carb":20.0,"cost":23.0,"profit":11.0,"desc":"葱香浓郁，上海风味","ingredients":[{"type":"I-食材","name":"面条","qty":1.0,"unit":"把"},{"type":"S-调料","name":"食用油","qty":3.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"葱","qty":5.0,"unit":"根"}],"scene":"丰盛正餐","tag":"🍚 主食 ⚡ 快手"},{"id":"D152","name":"阳春面","cat":"主食类","price":10.0,"time":10.0,"diff":"简单","kcal":118.0,"protein":3.0,"fat":0,"carb":20.0,"cost":23.0,"profit":9.3,"desc":"清淡素雅，苏式经典","ingredients":[{"type":"I-食材","name":"面条","qty":1.0,"unit":"把"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"姜","qty":2.0,"unit":"克"}],"scene":"低卡轻食","tag":"🍚 主食 🔥 低卡 ⚡ 快手"},{"id":"D153","name":"重庆小面","cat":"主食类","price":15.0,"time":15.0,"diff":"简单","kcal":174.0,"protein":3.0,"fat":0,"carb":20.0,"cost":23.0,"profit":12.6,"desc":"麻辣鲜香，巴蜀风味","ingredients":[{"type":"I-食材","name":"面条","qty":1.0,"unit":"把"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"甜面酱","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"醋/陈醋","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"花椒","qty":2.0,"unit":"克"},{"type":"S-调料","name":"干辣椒","qty":3.0,"unit":"克"}],"scene":"低卡轻食","tag":"🍚 主食 🔥 低卡 ⚡ 快手"},{"id":"D154","name":"热干面","cat":"主食类","price":12.0,"time":15.0,"diff":"简单","kcal":198.0,"protein":3.0,"fat":0,"carb":20.0,"cost":23.0,"profit":11.2,"desc":"芝麻酱香，武汉名吃","ingredients":[{"type":"I-食材","name":"面条","qty":1.0,"unit":"把"},{"type":"S-调料","name":"芝麻油/香油","qty":1.0,"unit":"勺"},{"type":"S-调料","name":"生抽/酱油","qty":1.0,"unit":"勺"}],"scene":"低卡轻食","tag":"🍚 主食 🔥 低卡 ⚡ 快手"},{"id":"D155","name":"刀削面","cat":"主食类","price":14.0,"time":20.0,"diff":"中等","kcal":543.0,"protein":15.0,"fat":3.0,"carb":114.0,"cost":123.0,"profit":13.85,"desc":"面条筋道，手工制作","ingredients":[{"type":"I-食材","name":"面粉","qty":3.0,"unit":"两"},{"type":"S-调料","name":"姜","qty":3.0,"unit":"克"}],"scene":"丰盛正餐","tag":"🍚 主食"},{"id":"D156","name":"西红柿鸡蛋面","cat":"主食类","price":15.0,"time":15.0,"diff":"简单","kcal":205.0,"protein":12.0,"fat":5.0,"carb":26.6,"cost":32.0,"profit":15.0,"desc":"酸甜开胃，制作简便","ingredients":[{"type":"I-食材","name":"鸡蛋","qty":1.0,"unit":"个"},{"type":"I-食材","name":"番茄","qty":2.0,"unit":"个"},{"type":"I-食材","name":"面条","qty":1.0,"unit":"把"}],"scene":"标准午餐","tag":"🍚 主食 🔥 低卡 ⚡ 快手"},{"id":"D157","name":"红烧牛肉面","cat":"主食类","price":25.0,"time":30.0,"diff":"中等","kcal":160.0,"protein":13.0,"fat":2.5,"carb":20.0,"cost":45.5,"profit":25.0,"desc":"牛肉软烂，汤浓面滑","ingredients":[{"type":"I-食材","name":"牛里脊","qty":0.5,"unit":"斤"},{"type":"I-食材","name":"面条","qty":1.0,"unit":"把"}],"scene":"低卡轻食","tag":"🍚 主食 🔥 低卡"},{"id":"D158","name":"油泼面","cat":"主食类","price":14.0,"time":15.0,"diff":"简单","kcal":738.0,"protein":15.0,"fat":3.0,"carb":114.0,"cost":123.0,"profit":12.65,"desc":"酸辣鲜香，面条爽滑","ingredients":[{"type":"I-食材","name":"面粉","qty":3.0,"unit":"两"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"干辣椒","qty":3.0,"unit":"克"},{"type":"S-调料","name":"姜","qty":3.0,"unit":"克"}],"scene":"大份硬菜","tag":"🍚 主食 ⚡ 快手"},{"id":"D159","name":"炸酱面","cat":"主食类","price":15.0,"time":20.0,"diff":"中等","kcal":200.0,"protein":11.5,"fat":4.0,"carb":20.0,"cost":33.0,"profit":14.1,"desc":"老北京风味，炸酱飘香","ingredients":[{"type":"I-食材","name":"瘦肉","qty":0.5,"unit":"斤"},{"type":"I-食材","name":"面条","qty":1.0,"unit":"把"},{"type":"S-调料","name":"黄酱/大酱","qty":3.0,"unit":"勺"}],"scene":"低卡轻食","tag":"🍚 主食 🔥 低卡"},{"id":"D160","name":"肉丝面","cat":"主食类","price":18.0,"time":20.0,"diff":"简单","kcal":186.0,"protein":11.5,"fat":4.0,"carb":20.0,"cost":33.0,"profit":17.4,"desc":"汤鲜面滑，经济实惠","ingredients":[{"type":"I-食材","name":"瘦肉","qty":0.5,"unit":"斤"},{"type":"I-食材","name":"面条","qty":1.0,"unit":"把"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"}],"scene":"低卡轻食","tag":"🍚 主食 🔥 低卡 ⚡ 快手"},{"id":"D161","name":"担担面","cat":"主食类","price":15.0,"time":15.0,"diff":"简单","kcal":162.0,"protein":8.1,"fat":2.4,"carb":20.0,"cost":29.0,"profit":14.2,"desc":"川味经典，麻辣鲜香","ingredients":[{"type":"I-食材","name":"瘦肉","qty":0.3,"unit":"斤"},{"type":"I-食材","name":"面条","qty":1.0,"unit":"把"},{"type":"S-调料","name":"花椒","qty":2.0,"unit":"克"},{"type":"S-调料","name":"干辣椒","qty":2.0,"unit":"克"}],"scene":"低卡轻食","tag":"🍚 主食 🔥 低卡 ⚡ 快手"},{"id":"D162","name":"手抓饼","cat":"主食类","price":6.0,"time":10.0,"diff":"简单","kcal":720.0,"protein":15.0,"fat":3.0,"carb":114.0,"cost":123.0,"profit":5.4,"desc":"外酥里嫩，卷啥都行","ingredients":[{"type":"I-食材","name":"面粉","qty":3.0,"unit":"两"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"}],"scene":"大份硬菜","tag":"🍚 主食 ⚡ 快手"},{"id":"D163","name":"鸡蛋灌饼","cat":"主食类","price":8.0,"time":10.0,"diff":"简单","kcal":795.0,"protein":22.0,"fat":8.0,"carb":114.6,"cost":124.4,"profit":7.4,"desc":"饼脆蛋香，早餐首选","ingredients":[{"type":"I-食材","name":"鸡蛋","qty":1.0,"unit":"个"},{"type":"I-食材","name":"面粉","qty":3.0,"unit":"两"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"}],"scene":"大份硬菜","tag":"🍚 主食 ⚡ 快手"},{"id":"D164","name":"煎饼果子","cat":"主食类","price":8.0,"time":10.0,"diff":"简单","kcal":630.0,"protein":22.0,"fat":8.0,"carb":114.6,"cost":124.4,"profit":7.7,"desc":"天津名吃，薄脆酥香","ingredients":[{"type":"I-食材","name":"鸡蛋","qty":1.0,"unit":"个"},{"type":"I-食材","name":"面粉","qty":3.0,"unit":"两"},{"type":"S-调料","name":"甜面酱","qty":1.0,"unit":"勺"}],"scene":"大份硬菜","tag":"🍚 主食 ⚡ 快手"},{"id":"D165","name":"水饺/饺子","cat":"主食类","price":15.0,"time":30.0,"diff":"中等","kcal":1032.5,"protein":43.9,"fat":6.4,"carb":180.9,"cost":212.35,"profit":14.4,"desc":"节日必备，薄皮大馅","ingredients":[{"type":"I-食材","name":"瘦肉","qty":0.8,"unit":"斤"},{"type":"I-食材","name":"大白菜","qty":0.3,"unit":"斤"},{"type":"I-食材","name":"饺子皮","qty":30.0,"unit":"张"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"}],"scene":"大份硬菜","tag":"🍚 主食"},{"id":"D166","name":"馄饨/云吞","cat":"主食类","price":12.0,"time":25.0,"diff":"中等","kcal":836.0,"protein":38.5,"fat":4.0,"carb":150.0,"cost":172.0,"profit":11.4,"desc":"皮薄馅嫩，汤鲜味美","ingredients":[{"type":"I-食材","name":"瘦肉","qty":0.5,"unit":"斤"},{"type":"I-食材","name":"馄饨皮","qty":30.0,"unit":"张"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"}],"scene":"大份硬菜","tag":"🍚 主食"},{"id":"D167","name":"包子","cat":"主食类","price":3.0,"time":40.0,"diff":"复杂","kcal":986.0,"protein":33.5,"fat":9.0,"carb":190.0,"cost":215.0,"profit":2.4,"desc":"早餐首选，种类繁多","ingredients":[{"type":"I-食材","name":"瘦肉","qty":0.5,"unit":"斤"},{"type":"I-食材","name":"面粉","qty":5.0,"unit":"两"},{"type":"S-调料","name":"生抽/酱油","qty":2.0,"unit":"勺"}],"scene":"大份硬菜","tag":"🍚 主食"},{"id":"D168","name":"花卷","cat":"主食类","price":2.0,"time":30.0,"diff":"中等","kcal":909.0,"protein":25.0,"fat":5.0,"carb":190.0,"cost":205.0,"profit":1.1,"desc":"松软可口，层次分明","ingredients":[{"type":"I-食材","name":"面粉","qty":5.0,"unit":"两"},{"type":"S-调料","name":"葱","qty":3.0,"unit":"根"}],"scene":"大份硬菜","tag":"🍚 主食"},{"id":"D169","name":"馒头","cat":"主食类","price":2.0,"time":30.0,"diff":"中等","kcal":900.0,"protein":25.0,"fat":5.0,"carb":190.0,"cost":205.0,"profit":2.0,"desc":"北方主食，朴实无华","ingredients":[{"type":"I-食材","name":"面粉","qty":5.0,"unit":"两"}],"scene":"大份硬菜","tag":"🍚 主食"},{"id":"D170","name":"蒸红薯","cat":"主食类","price":5.0,"time":40.0,"diff":"简单","kcal":180.0,"protein":2.0,"fat":0,"carb":42.0,"cost":46.0,"profit":5.0,"desc":"香甜软糯，健康粗粮","ingredients":[{"type":"I-食材","name":"红薯","qty":2.0,"unit":"个"}],"scene":"低卡轻食","tag":"🍚 主食 🔥 低卡 ⚡ 快手"},{"id":"D171","name":"煮玉米","cat":"主食类","price":4.0,"time":20.0,"diff":"简单","kcal":200.0,"protein":6.0,"fat":2.0,"carb":38.0,"cost":42.0,"profit":4.0,"desc":"清甜可口，天然粗粮","ingredients":[{"type":"I-食材","name":"玉米","qty":2.0,"unit":"根"}],"scene":"低卡轻食","tag":"🍚 主食 🔥 低卡 ⚡ 快手"},{"id":"D172","name":"煎饺/锅贴","cat":"主食类","price":16.0,"time":20.0,"diff":"中等","kcal":850.0,"protein":28.5,"fat":4.0,"carb":120.0,"cost":140.0,"profit":15.4,"desc":"底部酥脆，馅香四溢","ingredients":[{"type":"I-食材","name":"瘦肉","qty":0.5,"unit":"斤"},{"type":"I-食材","name":"饺子皮","qty":20.0,"unit":"张"},{"type":"S-调料","name":"食用油","qty":2.0,"unit":"勺"}],"scene":"大份硬菜","tag":"🍚 主食"},{"id":"D173","name":"蒸饺","cat":"主食类","price":16.0,"time":20.0,"diff":"简单","kcal":670.0,"protein":28.5,"fat":4.0,"carb":120.0,"cost":140.0,"profit":16.0,"desc":"晶莹剔透，薄皮大馅","ingredients":[{"type":"I-食材","name":"瘦肉","qty":0.5,"unit":"斤"},{"type":"I-食材","name":"饺子皮","qty":20.0,"unit":"张"}],"scene":"大份硬菜","tag":"🍚 主食 ⚡ 快手"},{"id":"D174","name":"糯米烧麦","cat":"主食类","price":15.0,"time":30.0,"diff":"中等","kcal":810.0,"protein":22.0,"fat":0,"carb":174.0,"cost":191.0,"profit":15.0,"desc":"糯米飘香，早茶必备","ingredients":[{"type":"I-食材","name":"饺子皮","qty":10.0,"unit":"张"},{"type":"I-食材","name":"糯米","qty":3.0,"unit":"两"}],"scene":"大份硬菜","tag":"🍚 主食"},{"id":"D175","name":"春卷","cat":"主食类","price":12.0,"time":25.0,"diff":"中等","kcal":544.5,"protein":15.3,"fat":3.0,"carb":114.9,"cost":124.35,"profit":12.0,"desc":"酥脆可口，节日气氛","ingredients":[{"type":"I-食材","name":"大白菜","qty":0.3,"unit":"斤"},{"type":"I-食材","name":"面粉","qty":3.0,"unit":"两"}],"scene":"丰盛正餐","tag":"🍚 主食"},{"id":"D176","name":"凉拌黄瓜","cat":"凉菜类","price":10.0,"time":5.0,"diff":"简单","kcal":54.0,"protein":2.0,"fat":0,"carb":6.0,"cost":8.0,"profit":9.0,"desc":"清脆爽口，夏季必备","ingredients":[{"type":"I-食材","name":"黄瓜","qty":2.0,"unit":"根"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"蒜","qty":2.0,"unit":"瓣"}],"scene":"低卡轻食","tag":"🥬 素菜 🔥 低卡 ⚡ 快手"},{"id":"D177","name":"凉拌木耳","cat":"凉菜类","price":12.0,"time":10.0,"diff":"简单","kcal":29.0,"protein":1.0,"fat":0,"carb":4.0,"cost":8.0,"profit":11.0,"desc":"木耳脆爽，健康凉菜","ingredients":[{"type":"I-食材","name":"木耳","qty":1.0,"unit":"两"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"蒜","qty":2.0,"unit":"瓣"}],"scene":"低卡轻食","tag":"🥬 素菜 🔥 低卡 ⚡ 快手"},{"id":"D178","name":"凉拌海带丝","cat":"凉菜类","price":10.0,"time":10.0,"diff":"简单","kcal":29.0,"protein":0.5,"fat":0,"carb":3.5,"cost":5.5,"profit":9.0,"desc":"海带滑嫩，补碘佳品","ingredients":[{"type":"I-食材","name":"海带","qty":0.5,"unit":"斤"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"蒜","qty":2.0,"unit":"瓣"}],"scene":"低卡轻食","tag":"🥬 素菜 🔥 低卡 ⚡ 快手"},{"id":"D179","name":"凉拌金针菇","cat":"凉菜类","price":12.0,"time":10.0,"diff":"简单","kcal":34.0,"protein":2.0,"fat":0,"carb":3.0,"cost":6.0,"profit":11.0,"desc":"滑嫩爽口，低卡健康","ingredients":[{"type":"I-食材","name":"金针菇","qty":1.0,"unit":"袋"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"蒜","qty":2.0,"unit":"瓣"}],"scene":"低卡轻食","tag":"🥬 素菜 🔥 低卡 ⚡ 快手"},{"id":"D180","name":"凉拌莴笋","cat":"凉菜类","price":12.0,"time":8.0,"diff":"简单","kcal":21.0,"protein":1.0,"fat":0,"carb":2.0,"cost":5.0,"profit":11.6,"desc":"清脆爽口，颜色翠绿","ingredients":[{"type":"I-食材","name":"莴笋","qty":1.0,"unit":"根"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"}],"scene":"低卡轻食","tag":"🥬 素菜 🔥 低卡 ⚡ 快手"},{"id":"D181","name":"凉拌皮蛋","cat":"凉菜类","price":14.0,"time":10.0,"diff":"简单","kcal":228.0,"protein":24.0,"fat":15.0,"carb":3.0,"cost":9.0,"profit":12.7,"desc":"蒜香扑鼻，风味独特","ingredients":[{"type":"I-食材","name":"皮蛋","qty":3.0,"unit":"个"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"蒜","qty":3.0,"unit":"瓣"}],"scene":"标准午餐","tag":"🥬 素菜 🔥 低卡 ⚡ 快手"},{"id":"D182","name":"凉拌腐竹","cat":"凉菜类","price":12.0,"time":10.0,"diff":"简单","kcal":109.0,"protein":9.0,"fat":5.0,"carb":2.0,"cost":7.0,"profit":11.0,"desc":"豆香浓郁，口感丰富","ingredients":[{"type":"I-食材","name":"腐竹","qty":1.0,"unit":"两"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"蒜","qty":2.0,"unit":"瓣"}],"scene":"低卡轻食","tag":"🥬 素菜 🔥 低卡 ⚡ 快手"},{"id":"D183","name":"凉拌豆腐皮","cat":"凉菜类","price":12.0,"time":10.0,"diff":"简单","kcal":174.0,"protein":16.0,"fat":10.0,"carb":4.0,"cost":8.0,"profit":11.0,"desc":"清淡爽口，豆香四溢","ingredients":[{"type":"I-食材","name":"豆腐皮","qty":2.0,"unit":"张"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"蒜","qty":2.0,"unit":"瓣"}],"scene":"低卡轻食","tag":"🥬 素菜 🔥 低卡 ⚡ 快手"},{"id":"D184","name":"东北大拉皮","cat":"凉菜类","price":16.0,"time":15.0,"diff":"简单","kcal":40.0,"protein":1.0,"fat":0,"carb":6.0,"cost":12.0,"profit":16.0,"desc":"东北特色，爽滑Q弹","ingredients":[{"type":"I-食材","name":"黄瓜","qty":1.0,"unit":"根"},{"type":"I-食材","name":"魔芋丝","qty":1.0,"unit":"袋"}],"scene":"低卡轻食","tag":"🥬 素菜 🔥 低卡 ⚡ 快手"},{"id":"D185","name":"凉拌土豆丝","cat":"凉菜类","price":12.0,"time":10.0,"diff":"简单","kcal":154.0,"protein":4.0,"fat":0,"carb":30.0,"cost":33.0,"profit":11.0,"desc":"酸辣脆爽，开胃下饭","ingredients":[{"type":"I-食材","name":"土豆","qty":2.0,"unit":"个"},{"type":"S-调料","name":"醋/陈醋","qty":2.0,"unit":"勺"},{"type":"S-调料","name":"蒜","qty":2.0,"unit":"瓣"}],"scene":"低卡轻食","tag":"🥬 素菜 🔥 低卡 ⚡ 快手"}];
+
+let CUSTOM = JSON.parse(localStorage.getItem('custom_dishes')||'[]');
+let CART = JSON.parse(localStorage.getItem('cart')||'[]');
+let curCat = '全部';
+let detailDish = null;
+
+function allDishes(){ return [...BASE_DISHES, ...CUSTOM]; }
+
+// ===== EMOJI =====
+const CAT_EMOJI = {
+  '蛋类':'🥚','猪肉类':'🐷','鸡肉类':'🐔','牛肉类':'🐄','羊肉类':'🐑',
+  '鱼虾类':'🐟','豆腐类':'🧊','蔬菜类':'🥬','凉菜类':'🥗','汤类':'🍲',
+  '主食类':'🍚','其他':'🍽️'
+};
+function emo(cat){ return CAT_EMOJI[cat]||'🍽️'; }
+
+// ===== INIT =====
+function init(){
+  buildCatTabs();
+  render();
+  updateCartBadge();
+}
+
+function buildCatTabs(){
+  const cats = ['全部',...new Set(allDishes().map(d=>d.cat).filter(Boolean))].sort((a,b)=>a==='全部'?-1:0);
+  const el = document.getElementById('cat-tabs');
+  el.innerHTML = cats.map(c=>`<button class="ctb${c===curCat?' on':''}" onclick="setCat('${c}')">${c==='全部'?'🍽️ 全部':emo(c)+' '+c}</button>`).join('');
+}
+
+function setCat(c){
+  curCat = c;
+  buildCatTabs();
+  render();
+}
+
+function render(){
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  const diff = document.getElementById('diff-sel').value;
+  const scene = document.getElementById('scene-sel').value;
+  let list = allDishes();
+  if(curCat!=='全部') list = list.filter(d=>d.cat===curCat);
+  if(q) list = list.filter(d=>(d.name||'').toLowerCase().includes(q)||(d.desc||'').toLowerCase().includes(q)||(d.tag||'').toLowerCase().includes(q));
+  if(diff) list = list.filter(d=>d.diff===diff);
+  if(scene) list = list.filter(d=>d.scene===scene);
+  const grid = document.getElementById('dish-grid');
+  // 更新菜品计数
+  document.getElementById('dish-count').textContent = `共 ${list.length} 道菜品`;
+  if(!list.length){
+    grid.innerHTML='<div class="empty"><div class="empty-icon">🍳</div><div>没有找到相关菜品</div><div style="font-size:12px;margin-top:4px">试试调整筛选条件</div></div>';
+    return;
+  }
+  grid.innerHTML = list.map(d=>cardHTML(d)).join('');
+}
+
+function cardHTML(d){
+  const ci = CART.find(c=>c.id===d.id);
+  const inCart = ci ? `<span style="font-size:11px;color:var(--ok);font-weight:700">已点 ${ci.qty} 份</span>` : '';
+  // 随机给一些菜品加徽章
+  const hash = d.id.split('').reduce((a,c)=>a+c.charCodeAt(0),0);
+  const badge = hash%5===0 ? '<span class="card-badge hot">🔥人气</span>' :
+                hash%7===0 ? '<span class="card-badge new">✨新品</span>' :
+                hash%3===0 ? '<span class="card-badge pop">⭐推荐</span>' : '';
+  return `<div class="card" onclick="openDetail('${d.id}')">
+    <div class="card-img">${emo(d.cat)}${badge}</div>
+    <div class="card-body">
+      <div class="card-name">${d.name}</div>
+      <div class="card-cat">${d.cat||''}</div>
+      <div class="card-desc">${d.desc||''}</div>
+      ${d.tag?`<div class="card-tag">${d.tag}</div>`:''}
+      <div class="card-foot">
+        <div class="price-wrap"><span class="price">¥${d.price||0}</span><span class="price-unit">/份</span></div>
+        <div style="display:flex;align-items:center;gap:6px">
+          ${inCart}
+          <button class="add-btn" onclick="event.stopPropagation();addToCart('${d.id}')">+加入</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ===== DETAIL =====
+function openDetail(id){
+  detailDish = allDishes().find(d=>d.id===id);
+  if(!detailDish) return;
+  const d = detailDish;
+  document.getElementById('d-name').textContent = emo(d.cat)+' '+d.name;
+  document.getElementById('d-cat').textContent = d.cat;
+  document.getElementById('d-meta').innerHTML = [
+    d.diff?`<span class="mc">⚡ ${d.diff}</span>`:'',
+    d.time?`<span class="mc">⏱️ ${d.time}分钟</span>`:'',
+    d.price?`<span class="mc">💰 ¥${d.price}</span>`:'',
+    d.scene?`<span class="mc">📍 ${d.scene}</span>`:'',
+  ].join('');
+  const ings = (d.ingredients||[]);
+  document.getElementById('d-chips').innerHTML = ings.length
+    ? ings.map(i=>`<span class="chip ${i.type&&i.type.startsWith('S')?'S':'I'}">${i.name} ${i.qty||''}${i.unit||''}</span>`).join('')
+    : '<span style="color:var(--sub);font-size:12px">暂无食材信息</span>';
+  document.getElementById('d-nut').innerHTML = [
+    ['热量','kcal',d.kcal],['蛋白质','g',d.protein],['脂肪','g',d.fat],['碳水','g',d.carb]
+  ].map(([k,u,v])=>`<div class="nut-item"><div class="nut-v">${v||0}</div><div class="nut-k">${k}(${u})</div></div>`).join('');
+  document.getElementById('d-scene-tag').innerHTML = d.tag?`<div style="font-size:12px;background:var(--tagbg);color:var(--tagc);border-radius:10px;padding:5px 12px;display:inline-block">${d.tag}</div>`:'';
+  document.getElementById('detail-ov').classList.add('open');
+}
+function closeDetail(){ document.getElementById('detail-ov').classList.remove('open'); }
+function addFromDetail(){
+  if(detailDish){ addToCart(detailDish.id); closeDetail(); }
+}
+
+// ===== CART =====
+function addToCart(id){
+  const d = allDishes().find(x=>x.id===id);
+  if(!d) return;
+  const idx = CART.findIndex(c=>c.id===id);
+  if(idx>=0) CART[idx].qty++;
+  else CART.push({id,name:d.name,price:d.price||0,qty:1});
+  saveCart(); updateCartBadge(); render();
+  showToast(`✅ "${d.name}" 已加入购物车`);
+}
+function changeQty(id,delta){
+  const idx = CART.findIndex(c=>c.id===id);
+  if(idx<0) return;
+  CART[idx].qty += delta;
+  if(CART[idx].qty<=0) CART.splice(idx,1);
+  saveCart(); updateCartBadge(); renderCart(); render();
+}
+function clearCart(){
+  if(!confirm('确定清空购物车吗？')) return;
+  CART = []; saveCart(); updateCartBadge(); renderCart(); render();
+}
+function saveCart(){ localStorage.setItem('cart', JSON.stringify(CART)); }
+function updateCartBadge(){
+  const n = CART.reduce((a,c)=>a+c.qty,0);
+  document.getElementById('cart-count').textContent = n;
+}
+function openCart(){ renderCart(); document.getElementById('cart-ov').classList.add('open'); }
+function closeCart(){ document.getElementById('cart-ov').classList.remove('open'); }
+function renderCart(){
+  const el = document.getElementById('cart-items');
+  if(!CART.length){ el.innerHTML='<div class="cart-empty"><div style="font-size:48px;margin-bottom:8px">🍽️</div><div>餐盘还是空的</div><div style="font-size:12px;margin-top:4px;color:var(--sub)">快去选几道美味吧！</div></div>'; document.getElementById('cart-total').textContent='¥0'; return; }
+  el.innerHTML = CART.map(c=>`<div class="ci">
+    <div class="ci-name">${c.name}</div>
+    <div class="qty-ctrl">
+      <button class="qb" onclick="changeQty('${c.id}',-1)">−</button>
+      <span class="qty-n">${c.qty}</span>
+      <button class="qb" onclick="changeQty('${c.id}',1)">＋</button>
+    </div>
+    <div class="ci-price">¥${(c.price*c.qty).toFixed(1)}</div>
+  </div>`).join('');
+  const total = CART.reduce((a,c)=>a+c.price*c.qty,0);
+  document.getElementById('cart-total').textContent = '¥'+total.toFixed(1);
+}
+function submitOrder(){
+  if(!CART.length){ showToast('购物车是空的！'); return; }
+  const total = CART.reduce((a,c)=>a+c.price*c.qty,0);
+  const n = CART.reduce((a,c)=>a+c.qty,0);
+  document.getElementById('oc-sub').innerHTML = `共 ${n} 份菜，合计 <strong style="color:var(--p)">¥${total.toFixed(1)}</strong><br><span style="font-size:11px;color:var(--sub)">订单已记录，请告知厨师</span>`;
+  CART=[]; saveCart(); updateCartBadge(); renderCart(); render();
+  closeCart();
+  document.getElementById('order-confirm').classList.add('open');
+}
+function closeOrderConfirm(){ document.getElementById('order-confirm').classList.remove('open'); }
+
+// ===== ADMIN =====
+function openAdmin(id){
+  document.getElementById('del-btn').style.display='none';
+  document.getElementById('admin-title').textContent = id?'✏️ 编辑菜品':'➕ 添加新菜品';
+  if(id){
+    const d = CUSTOM.find(x=>x.id===id)||BASE_DISHES.find(x=>x.id===id);
+    if(!d) return;
+    document.getElementById('f-id').value = d.id;
+    document.getElementById('f-name').value = d.name||'';
+    document.getElementById('f-cat').value = d.cat||'其他';
+    document.getElementById('f-price').value = d.price||'';
+    document.getElementById('f-time').value = d.time||'';
+    document.getElementById('f-diff').value = d.diff||'简单';
+    document.getElementById('f-kcal').value = d.kcal||'';
+    document.getElementById('f-scene').value = d.scene||'';
+    document.getElementById('f-tag').value = d.tag||'';
+    document.getElementById('f-desc').value = d.desc||'';
+    if(CUSTOM.find(x=>x.id===id)) document.getElementById('del-btn').style.display='block';
+  } else {
+    ['f-id','f-name','f-price','f-time','f-kcal','f-tag','f-desc'].forEach(i=>document.getElementById(i).value='');
+    document.getElementById('f-cat').value='其他';
+    document.getElementById('f-diff').value='简单';
+    document.getElementById('f-scene').value='';
+  }
+  document.getElementById('admin-ov').classList.add('open');
+}
+function closeAdmin(){ document.getElementById('admin-ov').classList.remove('open'); }
+function saveDish(){
+  const name = document.getElementById('f-name').value.trim();
+  if(!name){ showToast('请输入菜品名称'); return; }
+  const id = document.getElementById('f-id').value || ('C'+Date.now());
+  const dish = {
+    id, name,
+    cat: document.getElementById('f-cat').value,
+    price: parseFloat(document.getElementById('f-price').value)||0,
+    time: parseFloat(document.getElementById('f-time').value)||0,
+    diff: document.getElementById('f-diff').value,
+    kcal: parseFloat(document.getElementById('f-kcal').value)||0,
+    scene: document.getElementById('f-scene').value,
+    tag: document.getElementById('f-tag').value.trim(),
+    desc: document.getElementById('f-desc').value.trim(),
+    ingredients: [],
+    protein:0, fat:0, carb:0, cost:0, profit:0
+  };
+  const idx = CUSTOM.findIndex(x=>x.id===id);
+  if(idx>=0) CUSTOM[idx]=dish;
+  else CUSTOM.push(dish);
+  localStorage.setItem('custom_dishes',JSON.stringify(CUSTOM));
+  closeAdmin(); buildCatTabs(); render();
+  showToast(`✅ "${name}" 已保存`);
+}
+function deleteDish(){
+  const id = document.getElementById('f-id').value;
+  if(!id||!confirm('确定删除这道菜吗？')) return;
+  CUSTOM = CUSTOM.filter(x=>x.id!==id);
+  localStorage.setItem('custom_dishes',JSON.stringify(CUSTOM));
+  closeAdmin(); buildCatTabs(); render();
+  showToast('🗑️ 菜品已删除');
+}
+
+// ===== TOAST =====
+let toastTimer;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// ===== START =====
+init();
+</script>
+</body>
+</html>
 </style>
 </head>
 <body>
