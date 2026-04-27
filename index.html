@@ -4,6 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>🍽️ 家常菜点菜系统</title>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAk4p8G0esWi2-OXyKKxXq_eYPAsgu1adY",
+  authDomain: "ordering-and-billing-sys-bc4f3.firebaseapp.com",
+  databaseURL: "https://ordering-and-billing-sys-bc4f3-default-rtdb.firebaseio.com",
+  projectId: "ordering-and-billing-sys-bc4f3",
+  storageBucket: "ordering-and-billing-sys-bc4f3.firebasestorage.app",
+  messagingSenderId: "500763684423",
+  appId: "1:500763684423:web:70dbe25fef00a99a504b62"
+};
+firebase.initializeApp(firebaseConfig);
+const DB = firebase.database();
+</script>
 <style>
 /* ===== 家常菜点菜系统 - 清新粉白主题 ===== */
 :root{--p:#E8628A;--pl:#F093B0;--pd:#C94070;--bg:#FFF5F8;--card:#FFFFFF;--tx:#3D1F2D;--sub:#9B7088;--bd:#F5D5E2;--tagbg:#FCEEF3;--tagc:#C94070;--ok:#4A9E6B;--err:#E8628A;--sh:0 3px 14px rgba(232,98,138,.10);--r:16px}
@@ -731,7 +747,19 @@ function submitOrder(){
   if(!CART.length){ showToast('购物车是空的！'); return; }
   const total = CART.reduce((a,c)=>a+c.price*c.qty,0);
   const n = CART.reduce((a,c)=>a+c.qty,0);
-  document.getElementById('oc-sub').innerHTML = `共 ${n} 份菜，合计 <strong style="color:var(--p)">¥${total.toFixed(1)}</strong><br><span style="font-size:11px;color:var(--sub)">订单已记录，请告知厨师</span>`;
+  // Build order object
+  const order = {
+    items: CART.map(c=>({id:c.id, name:c.name, price:c.price, qty:c.qty})),
+    total: total,
+    count: n,
+    status: 'new',
+    createdAt: firebase.database.ServerValue.TIMESTAMP
+  };
+  // Write to Firebase
+  const orderRef = DB.ref('orders').push(order);
+  const orderId = orderRef.key;
+  // Clear cart and show confirmation
+  document.getElementById('oc-sub').innerHTML = `共 ${n} 份菜，合计 <strong style="color:var(--p)">¥${total.toFixed(1)}</strong><br><span style="font-size:11px;color:var(--sub)">已发送给厨房，请稍等～</span><br><span style="font-size:11px;color:var(--sub)">订单号：${orderId.slice(-6).toUpperCase()}</span>`;
   CART=[]; saveCart(); updateCartBadge(); renderCart(); render();
   closeCart();
   document.getElementById('order-confirm').classList.add('open');
