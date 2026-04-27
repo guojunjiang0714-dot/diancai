@@ -832,8 +832,35 @@ function updateOrderCountBadge(){
   document.getElementById('order-count').textContent = n;
 }
 function openMyOrders(){
-  renderMyOrders();
-  document.getElementById('my-orders').classList.add('open');
+  // 每次打开时从Firebase获取最新状态
+  DB.ref('orders').once('value').then(snap => {
+    const fbOrders = snap.val() || {};
+    
+    // 更新本地订单状态
+    let updated = false;
+    Object.entries(fbOrders).forEach(([orderId, order]) => {
+      const localId = orderId.slice(-6).toUpperCase();
+      const idx = MY_ORDERS.findIndex(o => o.localId === localId);
+      if(idx !== -1 && MY_ORDERS[idx].status !== order.status){
+        MY_ORDERS[idx].status = order.status;
+        updated = true;
+        console.log('[Firebase] 同步订单 #' + localId + ' 状态: ' + order.status);
+      }
+    });
+    
+    if(updated){
+      localStorage.setItem('my_orders', JSON.stringify(MY_ORDERS));
+      updateOrderCountBadge();
+    }
+    
+    // 渲染订单列表
+    renderMyOrders();
+    document.getElementById('my-orders').classList.add('open');
+  }).catch(err => {
+    console.error('[Firebase] 获取订单失败:', err);
+    renderMyOrders();
+    document.getElementById('my-orders').classList.add('open');
+  });
 }
 function closeMyOrders(){
   document.getElementById('my-orders').classList.remove('open');
@@ -939,6 +966,54 @@ function showToast(msg){
   clearTimeout(toastTimer);
   toastTimer = setTimeout(()=>t.classList.remove('show'),2200);
 }
+
+// ===== FIREBASE REAL-TIME ORDER SYNC =====
+function syncMyOrders(){
+  // 监听Firebase中订单状态变化，同步到本地
+  DB.ref('orders').on('child_changed', (snap) => {
+    const changedOrder = snap.val();
+    const orderId = snap.key;
+    const localId = orderId.slice(-6).toUpperCase();
+    
+    // 查找本地订单并更新状态
+    const idx = MY_ORDERS.findIndex(o => o.localId === localId);
+    console.log('[Firebase Sync] 订单变化 #' + localId + ' 新状态: ' + changedOrder.status + ', 本地索引: ' + idx);
+    
+    if(idx !== -1 && MY_ORDERS[idx].status !== changedOrder.status){
+      MY_ORDERS[idx].status = changedOrder.status;
+      MY_ORDERS[idx].updatedAt = Date.now(); // 标记更新时间
+      localStorage.setItem('my_orders', JSON.stringify(MY_ORDERS));
+      updateOrderCountBadge();
+      
+      // 如果"我的订单"面板已打开，刷新显示
+      const myOrdersPanel = document.getElementById('my-orders');
+      if(myOrdersPanel && myOrdersPanel.classList.contains('open')){
+        renderMyOrders();
+      }
+      
+      console.log('✅ 订单 #' + localId + ' 状态已更新为: ' + changedOrder.status);
+    }
+  });
+  
+  // 同时监听child_added，确保新订单也能被记录
+  DB.ref('orders').on('child_added', (snap) => {
+    const order = snap.val();
+    const orderId = snap.key;
+    const localId = orderId.slice(-6).toUpperCase();
+    
+    // 如果本地没有这个订单，但Firebase有（可能是旧订单同步过来的）
+    const exists = MY_ORDERS.some(o => o.localId === localId);
+    if(!exists && order.status === 'new'){
+      console.log('[Firebase] 发现未同步的新订单 #' + localId);
+      MY_ORDERS.unshift(Object.assign({localId: localId}, order));
+      localStorage.setItem('my_orders', JSON.stringify(MY_ORDERS));
+      updateOrderCountBadge();
+    }
+  });
+}
+
+// 启动Firebase同步
+syncMyOrders();
 
 // ===== START =====
 init();
