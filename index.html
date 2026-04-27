@@ -148,6 +148,38 @@ body{font-family:"PingFang SC","Microsoft YaHei","SimSun",sans-serif;background:
 .oc-sub{font-size:13px;color:var(--sub);margin-bottom:24px;line-height:1.6}
 .oc-ok{background:linear-gradient(135deg,var(--p),var(--pl));color:#fff;border:none;border-radius:20px;padding:13px 28px;font-size:15px;font-weight:800;cursor:pointer;width:100%;box-shadow:0 4px 16px rgba(232,98,138,.35);transition:all .2s}
 .oc-ok:hover{background:linear-gradient(135deg,var(--pd),var(--p));box-shadow:0 6px 20px rgba(232,98,138,.45);transform:scale(1.02)}
+/* MY ORDERS */
+.my-orders{position:fixed;inset:0;z-index:600;display:none}
+.my-orders.open{display:block}
+.my-orders-bg{position:absolute;inset:0;background:rgba(61,31,45,.45);backdrop-filter:blur(4px)}
+.my-orders-drawer{position:absolute;left:0;top:0;bottom:0;width:min(420px,100vw);background:#fff;display:flex;flex-direction:column;animation:moIn .3s cubic-bezier(.34,1.56,.64,1);box-shadow:8px 0 32px rgba(201,64,112,.18)}
+@keyframes moIn{from{transform:translateX(-100%)}to{transform:none}}
+.my-orders-hd{padding:16px 18px;border-bottom:2px solid var(--bd);display:flex;align-items:center;justify-content:space-between}
+.my-orders-hd-title{font-size:18px;font-weight:900;color:var(--tx);display:flex;align-items:center;gap:8px}
+.my-orders-list{flex:1;overflow-y:auto;padding:14px 16px}
+.my-orders-empty{text-align:center;padding:50px 0;color:var(--sub);font-size:14px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.oh-card{background:#fff;border-radius:16px;border:2px solid var(--bd);margin-bottom:14px;overflow:hidden;box-shadow:var(--sh)}
+.oh-hd{background:var(--tagbg);padding:8px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bd)}
+.oh-id{font-size:11px;font-weight:800;color:var(--tagc);letter-spacing:1.5px;font-family:monospace}
+.oh-time{font-size:11px;color:var(--sub);font-weight:600}
+.oh-badge{padding:2px 8px;border-radius:20px;font-size:10px;font-weight:800}
+.oh-badge.new{background:var(--p);color:#fff}
+.oh-badge.accepted{background:var(--pl);color:#fff}
+.oh-badge.completed{background:var(--ok);color:#fff}
+.oh-items{padding:10px 14px;display:flex;flex-direction:column;gap:6px}
+.oh-item{display:flex;align-items:center;gap:8px}
+.oh-qty{background:var(--tagbg);color:var(--p);border-radius:8px;padding:1px 6px;font-size:12px;font-weight:900;min-width:30px;text-align:center}
+.oh-name{font-size:13px;font-weight:700;color:var(--tx);flex:1}
+.oh-price{font-size:13px;font-weight:900;color:var(--p)}
+.oh-ft{padding:8px 14px;border-top:1px dashed var(--bd);display:flex;align-items:center;justify-content:space-between}
+.oh-total{font-size:15px;font-weight:900;color:var(--pd)}
+/* ORDER CONFIRM DETAILS */
+.oc-items{margin:10px 0 16px;text-align:left;max-height:180px;overflow-y:auto;border:1.5px solid var(--bd);border-radius:14px;padding:10px 12px;background:#FFF5F8}
+.oc-item{display:flex;align-items:center;justify-content:space-between;padding:4px 0;border-bottom:1px dashed var(--bd);font-size:13px}
+.oc-item:last-child{border-bottom:none}
+.oc-item-name{font-weight:700;color:var(--tx);flex:1}
+.oc-item-info{color:var(--sub);font-size:11px}
+.oc-items-total{text-align:right;margin-top:8px;padding-top:8px;border-top:1.5px solid var(--bd);font-size:15px;font-weight:900;color:var(--pd)}
 /* Fab */
 .fab{position:fixed;right:20px;bottom:24px;background:linear-gradient(135deg,var(--p),var(--pl));color:#fff;border:none;border-radius:50%;width:52px;height:52px;font-size:24px;cursor:pointer;box-shadow:0 6px 20px rgba(232,98,138,.4);display:flex;align-items:center;justify-content:center;z-index:300;transition:all .22s;letter-spacing:-1px}
 .fab:hover{background:linear-gradient(135deg,var(--pd),var(--p));transform:scale(1.1);box-shadow:0 8px 28px rgba(232,98,138,.5)}
@@ -412,9 +444,14 @@ body{font-family:"PingFang SC","Microsoft YaHei","SimSun",sans-serif;background:
 
 <div class="hd">
   <div class="hd-t"><span class="hd-icon">🏠</span>家常菜点菜</div>
-  <button class="cart-btn" onclick="openCart()">
-    🛒 购物车 <span class="badge" id="cart-count">0</span>
-  </button>
+  <div style="display:flex;gap:8px">
+    <button class="cart-btn" onclick="openMyOrders()" style="background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.6)">
+      📋 我的订单 <span class="badge" id="order-count" style="background:#fff;color:var(--pd)">0</span>
+    </button>
+    <button class="cart-btn" onclick="openCart()">
+      🛒 购物车 <span class="badge" id="cart-count">0</span>
+    </button>
+  </div>
 </div>
 
 <div class="top-banner">
@@ -546,8 +583,21 @@ body{font-family:"PingFang SC","Microsoft YaHei","SimSun",sans-serif;background:
   <div class="oc-box">
     <div class="oc-icon">🍽️</div>
     <div class="oc-title">下单成功！</div>
+    <div class="oc-items" id="oc-items"></div>
     <div class="oc-sub" id="oc-sub"></div>
     <button class="oc-ok" onclick="closeOrderConfirm()">🥢 继续点菜</button>
+  </div>
+</div>
+
+<!-- My Orders Drawer -->
+<div class="my-orders" id="my-orders">
+  <div class="my-orders-bg" onclick="closeMyOrders()"></div>
+  <div class="my-orders-drawer">
+    <div class="my-orders-hd">
+      <div class="my-orders-hd-title">📋 我的订单</div>
+      <button class="modal-close" onclick="closeMyOrders()">×</button>
+    </div>
+    <div class="my-orders-list" id="my-orders-list"></div>
   </div>
 </div>
 
@@ -753,18 +803,72 @@ function submitOrder(){
     total: total,
     count: n,
     status: 'new',
-    createdAt: firebase.database.ServerValue.TIMESTAMP
+    createdAt: Date.now()
   };
   // Write to Firebase
   const orderRef = DB.ref('orders').push(order);
   const orderId = orderRef.key;
-  // Clear cart and show confirmation
-  document.getElementById('oc-sub').innerHTML = `共 ${n} 份菜，合计 <strong style="color:var(--p)">¥${total.toFixed(1)}</strong><br><span style="font-size:11px;color:var(--sub)">已发送给厨房，请稍等～</span><br><span style="font-size:11px;color:var(--sub)">订单号：${orderId.slice(-6).toUpperCase()}</span>`;
+  // Save to local history
+  const localOrder = Object.assign({localId: orderId.slice(-6).toUpperCase()}, order);
+  MY_ORDERS.unshift(localOrder);
+  if(MY_ORDERS.length > 50) MY_ORDERS = MY_ORDERS.slice(0, 50);
+  localStorage.setItem('my_orders', JSON.stringify(MY_ORDERS));
+  updateOrderCountBadge();
+  // Show confirmation with items
+  document.getElementById('oc-items').innerHTML =
+    CART.map(c=>`<div class="oc-item"><span class="oc-item-name">${c.name}</span><span class="oc-item-info">×${c.qty}  ¥${(c.price*c.qty).toFixed(1)}</span></div>`).join('')
+    + `<div class="oc-items-total">合计：¥${total.toFixed(1)}（${n}份）</div>`;
+  document.getElementById('oc-sub').innerHTML = `<span style="font-size:11px;color:var(--sub)">已发送给厨房，请稍等～</span><br><span style="font-size:11px;color:var(--sub)">订单号：${orderId.slice(-6).toUpperCase()}</span>`;
   CART=[]; saveCart(); updateCartBadge(); renderCart(); render();
   closeCart();
   document.getElementById('order-confirm').classList.add('open');
 }
 function closeOrderConfirm(){ document.getElementById('order-confirm').classList.remove('open'); }
+
+// ===== MY ORDERS =====
+let MY_ORDERS = JSON.parse(localStorage.getItem('my_orders') || '[]');
+function updateOrderCountBadge(){
+  const n = MY_ORDERS.length;
+  document.getElementById('order-count').textContent = n;
+}
+function openMyOrders(){
+  renderMyOrders();
+  document.getElementById('my-orders').classList.add('open');
+}
+function closeMyOrders(){
+  document.getElementById('my-orders').classList.remove('open');
+}
+function timeStr(ts){
+  const d = new Date(ts);
+  const mo = d.getMonth()+1;
+  const day = d.getDate();
+  const h = String(d.getHours()).padStart(2,'0');
+  const m = String(d.getMinutes()).padStart(2,'0');
+  return `${mo}/${day} ${h}:${m}`;
+}
+function renderMyOrders(){
+  const el = document.getElementById('my-orders-list');
+  if(!MY_ORDERS.length){
+    el.innerHTML = '<div class="my-orders-empty"><div style="font-size:52px;opacity:.3">📋</div><div>暂无订单记录</div><div style="font-size:12px">下完单会显示在这里哦</div></div>';
+    return;
+  }
+  el.innerHTML = MY_ORDERS.map(o=>`
+    <div class="oh-card">
+      <div class="oh-hd">
+        <div class="oh-id">#${o.localId}</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="oh-time">${timeStr(o.createdAt)}</div>
+          <div class="oh-badge ${o.status}">${{new:'待制作',accepted:'制作中',completed:'已完成'}[o.status]||'待制作'}</div>
+        </div>
+      </div>
+      <div class="oh-items">
+        ${(o.items||[]).map(i=>`<div class="oh-item"><div class="oh-qty">×${i.qty}</div><div class="oh-name">${i.name}</div><div class="oh-price">¥${(i.price*i.qty).toFixed(1)}</div></div>`).join('')}
+      </div>
+      <div class="oh-ft"><div class="oh-total">合计 ¥${(o.total||0).toFixed(1)} · ${o.count||0}份</div></div>
+    </div>
+  `).join('');
+}
+updateOrderCountBadge();
 
 // ===== ADMIN =====
 function openAdmin(id){
