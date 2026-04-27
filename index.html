@@ -803,7 +803,8 @@ function submitOrder(){
     total: total,
     count: n,
     status: 'new',
-    createdAt: Date.now()
+    createdAt: Date.now(),
+    deviceId: MY_DEVICE_ID  // 绑定设备ID，保护数据隐私
   };
   // Write to Firebase
   const orderRef = DB.ref('orders').push(order);
@@ -827,18 +828,29 @@ function closeOrderConfirm(){ document.getElementById('order-confirm').classList
 
 // ===== MY ORDERS =====
 let MY_ORDERS = JSON.parse(localStorage.getItem('my_orders') || '[]');
+
+// 设备唯一标识，保护数据隐私
+let MY_DEVICE_ID = localStorage.getItem('device_id');
+if(!MY_DEVICE_ID){
+  MY_DEVICE_ID = 'D' + Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+  localStorage.setItem('device_id', MY_DEVICE_ID);
+}
+
 function updateOrderCountBadge(){
   const n = MY_ORDERS.length;
   document.getElementById('order-count').textContent = n;
 }
 function openMyOrders(){
-  // 每次打开时从Firebase获取最新状态
+  // 每次打开时从Firebase获取最新状态（只同步本设备的订单）
   DB.ref('orders').once('value').then(snap => {
     const fbOrders = snap.val() || {};
     
-    // 更新本地订单状态
+    // 更新本地订单状态（只处理本设备的订单）
     let updated = false;
     Object.entries(fbOrders).forEach(([orderId, order]) => {
+      // 安全检查：只处理属于本设备的订单
+      if(order.deviceId !== MY_DEVICE_ID) return;
+      
       const localId = orderId.slice(-6).toUpperCase();
       const idx = MY_ORDERS.findIndex(o => o.localId === localId);
       if(idx !== -1 && MY_ORDERS[idx].status !== order.status){
@@ -969,11 +981,14 @@ function showToast(msg){
 
 // ===== FIREBASE REAL-TIME ORDER SYNC =====
 function syncMyOrders(){
-  // 监听Firebase中订单状态变化，同步到本地
+  // 监听Firebase中订单状态变化（只同步本设备的订单）
   DB.ref('orders').on('child_changed', (snap) => {
     const changedOrder = snap.val();
     const orderId = snap.key;
     const localId = orderId.slice(-6).toUpperCase();
+    
+    // 安全检查：只处理属于本设备的订单
+    if(changedOrder.deviceId !== MY_DEVICE_ID) return;
     
     // 查找本地订单并更新状态
     const idx = MY_ORDERS.findIndex(o => o.localId === localId);
@@ -992,22 +1007,6 @@ function syncMyOrders(){
       }
       
       console.log('✅ 订单 #' + localId + ' 状态已更新为: ' + changedOrder.status);
-    }
-  });
-  
-  // 同时监听child_added，确保新订单也能被记录
-  DB.ref('orders').on('child_added', (snap) => {
-    const order = snap.val();
-    const orderId = snap.key;
-    const localId = orderId.slice(-6).toUpperCase();
-    
-    // 如果本地没有这个订单，但Firebase有（可能是旧订单同步过来的）
-    const exists = MY_ORDERS.some(o => o.localId === localId);
-    if(!exists && order.status === 'new'){
-      console.log('[Firebase] 发现未同步的新订单 #' + localId);
-      MY_ORDERS.unshift(Object.assign({localId: localId}, order));
-      localStorage.setItem('my_orders', JSON.stringify(MY_ORDERS));
-      updateOrderCountBadge();
     }
   });
 }
