@@ -203,7 +203,7 @@ body{
   transition:transform .3s ease;
   line-height:1;
 }
-.card:hover .card-img span{transform:scale(1.15) rotate(-3deg)}
+.card:hover .card-img span:not(.card-badge){transform:scale(1.15) rotate(-3deg)}
 .card-img::after{
   content:'';position:absolute;bottom:0;left:0;right:0;height:30px;
   background:linear-gradient(to top,rgba(255,248,250,.98),transparent);
@@ -1071,8 +1071,7 @@ const CAT_EMOJI = {
   '鱼虾类':'🐟','豆腐类':'🧊','蔬菜类':'🥬','凉菜类':'🥗','汤类':'🍲',
   '主食类':'🍚','其他':'🍽️'
 };
-function emo(cat){ return CAT_EMOJI[cat]||'🍽️'; }
-
+function emo(cat){ return `<span>${CAT_EMOJI[cat]||'🍽️'}</span>`; }
 // ===== INIT =====
 function init(){
   buildCatTabs();
