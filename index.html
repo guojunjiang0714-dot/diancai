@@ -188,35 +188,26 @@ body{
 @keyframes stripeFlow{0%{background-position:0% 0%}100%{background-position:300% 0%}}
 .card:hover .card-stripe{animation:stripeFlow 1s linear infinite}
 
-/* 卡片图片区域 - 精致的圆形 Emoji 背景 */
+/* 卡片图片区域 - 简洁的 Emoji 展示 */
 .card-img{
   background:linear-gradient(145deg,#FFF5F8 0%,#FFF0F5 40%,#FCEEF3 70%,#FFF8FA 100%);
-  height:110px;display:flex;align-items:center;justify-content:center;
-  font-size:56px;position:relative;
+  height:100px;display:flex;align-items:center;justify-content:center;
+  font-size:64px;position:relative;
   border-bottom:1px solid var(--border-2);
-  /* 添加精致圆形背景 */
-}
-.card-img::before{
-  content:'';
-  position:absolute;
-  width:72px;height:72px;
-  background:linear-gradient(145deg,rgba(255,255,255,.9),rgba(255,240,245,.7));
-  border-radius:50%;
-  border:2px solid rgba(232,98,138,.15);
-  box-shadow:0 4px 16px rgba(232,98,138,.1),inset 0 2px 8px rgba(255,255,255,.8);
-  z-index:1;
+  overflow:hidden;
 }
 .card-img span{
   position:relative;
   z-index:2;
-  filter:drop-shadow(0 2px 4px rgba(0,0,0,.1));
+  filter:drop-shadow(0 3px 6px rgba(0,0,0,.08));
   transition:transform .3s ease;
+  line-height:1;
 }
-.card:hover .card-img span{transform:scale(1.1)}
+.card:hover .card-img span{transform:scale(1.15) rotate(-3deg)}
 .card-img::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;height:24px;
-  background:linear-gradient(to top,rgba(255,248,250,.95),transparent);
-  z-index:2;
+  content:'';position:absolute;bottom:0;left:0;right:0;height:30px;
+  background:linear-gradient(to top,rgba(255,248,250,.98),transparent);
+  z-index:3;
 }
 
 /* 角标动画 - 弹跳效果 */
